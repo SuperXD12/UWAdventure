@@ -14,11 +14,11 @@ public class Action_CommandList : MonoBehaviour
         gamelogic = GameObject.FindGameObjectWithTag("GameLogic");
     }
 
-    void Action_ChangeWeapon() {
+    public void Action_ChangeWeapon() {
         player.GetComponent<Weapon>().ExecuteAction_ChangeWeapon();
     }
 
-    void Action_IncreasePlayerDamage(int viewercount) {
+    public void Action_IncreasePlayerDamage(int viewercount) {
         StartCoroutine(TimedBuffDamage(viewercount));
     }
     private IEnumerator TimedBuffDamage(int viewercount) {
@@ -31,8 +31,8 @@ public class Action_CommandList : MonoBehaviour
         Debug.Log("Temp. buffed Damage of the Player by " + damagebuff + " expired");
     }
 
-    void Action_VoteSpawnBoss() { 
-    
+    public void Action_VoteSpawnBoss(int viewercount) {
+        gamelogic.GetComponent<GameLogic>().Action_VoteforBoss(viewercount);
     }
 
 }

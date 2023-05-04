@@ -35,12 +35,15 @@ public class GameLogic : MonoBehaviour
     public GameObject upgradeMenu;
     public GameObject highwtext;
     public GameObject highptext;
+    private int currentvotesforboss;
+    private int currentviewers;
 
     private IEnumerator coroutine;
     // Start is called before the first frame update
     void Start()
     {
-
+        currentviewers = 1;
+        currentvotesforboss = 0;
         if ((PlayerPrefs.HasKey("highscore_points") )&& (PlayerPrefs.HasKey("highscore_waves"))){
             highwtext.GetComponent<TMPro.TextMeshProUGUI>().text = PlayerPrefs.GetInt("highscore_waves").ToString();
             highptext.GetComponent<TMPro.TextMeshProUGUI>().text= PlayerPrefs.GetInt("highscore_points").ToString();
@@ -126,11 +129,31 @@ public class GameLogic : MonoBehaviour
             Debug.Log("MAX ENEMIES REACHED");
         }
 
+
         //coroutine=SpawnEnemy(currentenemyrate, enemyPrefab);
         //StartCoroutine(coroutine);
+        if (currentvotesforboss >= 2) { // Mathf.RoundToInt(currentviewers / 5))) { 
+            SpawnBossMonster();
+        }
+
+        currentvotesforboss = 0;
         Debug.Log("Next Wave");
         StartCoroutine(NextWave());
 
+    }
+
+    public void Action_VoteforBoss(int viewercount) {
+        currentvotesforboss += 1;
+        currentviewers = viewercount;
+    }
+
+    private void SpawnBossMonster() {
+
+        Vector3 center = player.transform.position;
+        //Debug.Log("SpawnEnemy Player Center: " + center);
+        int a = Random.Range(1, 360);
+        Vector3 pos = RandomCircle(center, 20, a);
+        GameObject tempenemy = Instantiate(blueslime, pos, Quaternion.identity);
     }
 
     private IEnumerator SpawnEnemy(float interval, GameObject enemy, GameObject strongenemy) {

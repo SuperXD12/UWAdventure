@@ -11,24 +11,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-[Serializable]
+/*[Serializable]
 public class VotingsO {
     public string id;
     public int votes;
-}
+} */
 
 
 
 public class Weapon : MonoBehaviour
 {
-    private const string URL = "https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod";
-    private const string URLID = "https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/votings/{0}";
-
-    static readonly HttpClient client = new HttpClient();
-
-    private int a_votes;
-    private int b_votes;
-    private int c_votes;
+    
 
     public GameObject text;
 
@@ -106,26 +99,21 @@ public class Weapon : MonoBehaviour
 
         if (Input.GetButtonDown("1")) {
             spell = 0;
-            text.GetComponent<TMPro.TextMeshProUGUI>().text = "Voting in progress...";
+            //text.GetComponent<TMPro.TextMeshProUGUI>().text = "Voting in progress...";
         }
         if (Input.GetButtonDown("2"))
         {
             spell = 1;
-            text.GetComponent<TMPro.TextMeshProUGUI>().text = "Voting in progress...";
+            //text.GetComponent<TMPro.TextMeshProUGUI>().text = "Voting in progress...";
         }
         if (Input.GetButtonDown("3"))
         {
             spell = 2;
-            text.GetComponent<TMPro.TextMeshProUGUI>().text = "Voting in progress...";
+            //text.GetComponent<TMPro.TextMeshProUGUI>().text = "Voting in progress...";
 
         }
 
-        if (voted) {
-
-            //VotingStopTheCount();
-            
-            
-        }
+        
 
        
 
@@ -199,129 +187,7 @@ public class Weapon : MonoBehaviour
         
     }
 
-    public async void VotingStopTheCount() {
-        voted = false;
-
-        string jsonResponse = await VotingSubRoutine("A");
-        Debug.Log(jsonResponse);
-        VotingsO voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
-        a_votes = voteson.votes;
-
-
-        jsonResponse = await VotingSubRoutine("B");
-        Debug.Log(jsonResponse);
-        voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
-        b_votes = voteson.votes;
-
-
-        jsonResponse = await VotingSubRoutine("C");
-        Debug.Log(jsonResponse);
-        voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
-        c_votes = voteson.votes;
-
-
-        Debug.Log(a_votes);
-        Debug.Log(b_votes);
-        Debug.Log(c_votes);
-
-
-        if (a_votes != 0 || b_votes != 0 || c_votes != 0)
-        {
-            if (a_votes > b_votes)
-            {
-                if (a_votes > c_votes)//A Spell
-                {
-                    spell = 0;
-                }
-                else //C Spell
-                {
-                    spell = 2;
-                }
-            }
-            else
-            {
-                if (b_votes > c_votes) //B Spell
-                {
-                    spell = 1;
-                }
-                else //C Spell
-                {
-                    spell = 2;
-                }
-            }
-            string spellletter = "";
-            switch (spell)
-            {
-                case 0:
-                    spellletter = "A";
-                    break;
-                case 1:
-                    spellletter = "B";
-                    break;
-                default:
-                    spellletter = "C";
-                    break;
-
-            }
-            text.GetComponent<TMPro.TextMeshProUGUI>().text = "It was voted for " + spellletter + "\nVotes: A " + a_votes.ToString() + " |B " + b_votes.ToString() + " |C " + c_votes.ToString();
-
-            ResetVotes("A");
-            ResetVotes("B");
-            ResetVotes("C");
-
-        }
-
-
-
-        
-
-
-        await Task.Delay(votinglength);
-        voted = true;
-    }
-
-
-    public async void ResetVotes(string Vid)
-    {
-        var votingsformat = new VotingsO();
-        votingsformat.id = Vid;
-        votingsformat.votes = 0;
-        string json = JsonConvert.SerializeObject(votingsformat);
-        var httpContent = new StringContent(json);
-        try
-        {
-            var res = await client.PostAsync("https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/votings/",httpContent );
-            res.EnsureSuccessStatusCode();
-
-        }
-        catch (HttpRequestException e)
-        {
-            Debug.Log("Exception Caught " + e.Message);
-        }
-    }
-
-    public async Task<string> VotingSubRoutine(string Vid) {
-
-
-        //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format("https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/votings/{0}", Vid));
-        try
-        {
-            client.Timeout = TimeSpan.FromSeconds(5);
-            HttpResponseMessage response = await client.GetAsync(String.Format("https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/votings/{0}", Vid));
-            response.EnsureSuccessStatusCode();
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            return jsonResponse;
-
-        }
-        catch (HttpRequestException e) {
-            Debug.Log("Exception Caught " + e.Message);
-        }
-
-        return "";
-
-        
-    }
-     
+    
 
     IEnumerator ShootingCoroutine()
     {
