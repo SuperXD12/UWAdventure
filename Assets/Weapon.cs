@@ -53,6 +53,7 @@ public class Weapon : MonoBehaviour
     public int votinglength = 30000;
     public int currentdamage = 500;
     public int basedamage = 500;
+    private System.Random rnd;
 
     private Transform currfirepoint;
     void Start() {
@@ -62,6 +63,7 @@ public class Weapon : MonoBehaviour
         votinglength = 30000;
         currentdamage = 500;
         basedamage = 500;
+        rnd = new System.Random();
     }
 
     // Update is called once per frame
@@ -133,6 +135,38 @@ public class Weapon : MonoBehaviour
             StartCoroutine(ShootingCoroutine());
             
         }
+    }
+
+    public void ExecuteAction_ChangeWeapon() {
+        int chosen = rnd.Next(1, 3);
+        if (spell == 0)
+        {
+            spell = chosen;
+        }
+        else {
+            if (spell == 1)
+            {
+                if (chosen == 1)
+                {
+                    spell = 0;
+                }
+                else
+                {
+                    spell = 2;
+                }
+            }
+            else { //spell==2
+                if (chosen == 1)
+                {
+                    spell = 0;
+                }
+                else {
+                    spell = 1;
+                }
+            
+            }
+        }
+        Debug.Log("Action Executed: Changed weapon to " + spell + " with rnd=" + rnd);
     }
 
     public void IncreaseDamage(int amount) {

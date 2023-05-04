@@ -81,4 +81,6 @@ public class Upgradehandling : MonoBehaviour
             mstext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<playermovement>().mSpeed.ToString();
         }
     }
+
+   
 }
