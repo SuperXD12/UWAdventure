@@ -133,10 +133,11 @@ public class GameLogic : MonoBehaviour
         //coroutine=SpawnEnemy(currentenemyrate, enemyPrefab);
         //StartCoroutine(coroutine);
         if (currentvotesforboss >= 2) { // Mathf.RoundToInt(currentviewers / 5))) { 
+            currentvotesforboss = 0;
             SpawnBossMonster();
         }
 
-        currentvotesforboss = 0;
+        
         Debug.Log("Next Wave");
         StartCoroutine(NextWave());
 

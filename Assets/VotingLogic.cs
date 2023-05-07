@@ -19,6 +19,8 @@ public class VotingsO
     public int votes;
 }
 
+
+
 public class VotingLogic : MonoBehaviour
 {
     public GameObject text_voteannouncement;
@@ -129,6 +131,7 @@ public class VotingLogic : MonoBehaviour
             ResetVotes("A");
             ResetVotes("B");
             ResetVotes("C");
+            ResetUids();
 
         }
 
@@ -152,6 +155,21 @@ public class VotingLogic : MonoBehaviour
         try
         {
             var res = await client.PostAsync("https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/votings/", httpContent);
+            res.EnsureSuccessStatusCode();
+
+        }
+        catch (HttpRequestException e)
+        {
+            Debug.Log("Exception Caught " + e.Message);
+        }
+    }
+
+    public async void ResetUids()
+    {
+        
+        try
+        {
+            var res = await client.PostAsync("https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/uidreset", null);
             res.EnsureSuccessStatusCode();
 
         }
