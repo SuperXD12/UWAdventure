@@ -14,6 +14,7 @@ using Random = UnityEngine.Random;
 
 public class GameLogic : MonoBehaviour
 {
+    public GameObject pollnametext;
     public GameObject player;
     public Upgradehandling uh;
     private int Numberofenemiestospawn = 5;
@@ -42,6 +43,7 @@ public class GameLogic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         currentviewers = 1;
         currentvotesforboss = 0;
         if ((PlayerPrefs.HasKey("highscore_points") )&& (PlayerPrefs.HasKey("highscore_waves"))){
@@ -76,6 +78,12 @@ public class GameLogic : MonoBehaviour
                 PauseGame();
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        string currentpollname =gameObject.GetComponent<VotingLogic>().GetCurrentPollName();
+        pollnametext.GetComponent<TMPro.TextMeshProUGUI>().text =currentpollname;
     }
 
     public int GetWave() {

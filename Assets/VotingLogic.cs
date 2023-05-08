@@ -19,6 +19,13 @@ public class VotingsO
     public int votes;
 }
 
+[Serializable]
+public class PutPollName
+{
+    //public string id;
+    public string Pollname;
+}
+
 
 
 public class VotingLogic : MonoBehaviour
@@ -38,10 +45,12 @@ public class VotingLogic : MonoBehaviour
     private int tempbuffdmgplayer_votes;
     private int votinglength;
     private bool votingsetting;
+    private string currentPollName;
 
     // Start is called before the first frame update
     void Start()
     {
+        currentPollName = ("Fish");
         votingsetting = false;
         gamelogic = GameObject.FindGameObjectWithTag("GameLogic");
         votinglength = 10000;
@@ -72,7 +81,26 @@ public class VotingLogic : MonoBehaviour
     public async void VotingStopTheCount()
     {
         voted = false;
-        
+        ResetVotes("A");
+        ResetVotes("B");
+        ResetVotes("C");
+        ResetUids();
+        if (currentPollName == "Fish")
+        {
+            currentPollName = "Seahorse";
+        }
+        else {
+            if (currentPollName == "Seahorse")
+            {
+                currentPollName = "Snail";
+            }
+            else {
+                currentPollName = "Fish";
+            }
+        }
+        PutPollName(currentPollName);
+        await Task.Delay(votinglength);
+
         string jsonResponse = await VotingSubRoutine("A");
         Debug.Log(jsonResponse);
         VotingsO voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
@@ -128,19 +156,11 @@ public class VotingLogic : MonoBehaviour
             
             text_voteannouncement.GetComponent<TMPro.TextMeshProUGUI>().text = "It was voted for " + voteresult + "\nVotes: A " + changeweapon_votes.ToString() + " |B " + voteboss_votes.ToString() + " |C " + tempbuffdmgplayer_votes.ToString();
 
-            ResetVotes("A");
-            ResetVotes("B");
-            ResetVotes("C");
-            ResetUids();
+            
 
         }
 
 
-
-
-
-
-        await Task.Delay(votinglength);
         voted = true;
     }
 
@@ -154,6 +174,7 @@ public class VotingLogic : MonoBehaviour
         var httpContent = new StringContent(json);
         try
         {
+            
             var res = await client.PostAsync("https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/votings/", httpContent);
             res.EnsureSuccessStatusCode();
 
@@ -202,4 +223,39 @@ public class VotingLogic : MonoBehaviour
 
 
     }
+
+    public async void PutPollName(string PM)
+    {
+
+        var pollnameformat = new PutPollName();
+        //pollnameformat.id = "CurrentPoll";
+        pollnameformat.Pollname = PM;
+        string json = JsonConvert.SerializeObject(pollnameformat);
+        json = JsonConvert.SerializeObject(json);
+        json = "{\"body\": " + json + "}";
+        //json = "{\"body\": \"{\\\"Pollname\\\":\\\"G\\\"}\"}";
+        var httpContent = new StringContent(json);
+        
+        try
+        {
+            Debug.Log(httpContent.ReadAsStringAsync().Result);
+            var res = await client.PostAsync("https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/pollname", httpContent);
+            res.EnsureSuccessStatusCode();
+            Debug.Log(res.Content.ReadAsStringAsync().Result);
+        }
+        catch (HttpRequestException e)
+        {
+            Debug.Log("Exception Caught " + e.Message);
+        }
+
+        
+
+
+    }
+
+    public string GetCurrentPollName() {
+        return currentPollName;
+    }
+
+
 }
