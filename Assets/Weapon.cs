@@ -21,10 +21,14 @@ public class VotingsO {
 
 public class Weapon : MonoBehaviour
 {
-    
+    Vector2 mousePos;
+    public Rigidbody2D rb;
+    public Camera cam;
+    public Animator animatorl;
+    public Animator animatorr;
 
     public GameObject text;
-
+    private float currentfirerate;
     public GameObject bloodbulletPrefab;
     public GameObject lightbulletPrefab;
     public GameObject waterbulletPrefab;
@@ -42,6 +46,8 @@ public class Weapon : MonoBehaviour
     public GameObject datext;
     public GameObject astext;
 
+    
+
     public float bulletForce = 10f;
     public int votinglength = 30000;
     public int currentdamage = 500;
@@ -50,6 +56,7 @@ public class Weapon : MonoBehaviour
 
     private Transform currfirepoint;
     void Start() {
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         firerate = 1f;
         spell = 0;
         bulletForce = 10f;
@@ -64,12 +71,13 @@ public class Weapon : MonoBehaviour
     {
         float helpspeed = movescript.helpspeed;
         float helpvertical = movescript.helpvertical;
+        /*
         if (helpspeed > 0.01f)
         {
             if (helpvertical <= -1f) // moving left
             {
                 currfirepoint = firepoint_left;
-                leftfirepoint.ChosenFirepoint();
+                leftfirepoint.ChosenFirepoint(spell);
                 rightfirepoint.NotChosenFirepoint();
             }
             else
@@ -77,13 +85,13 @@ public class Weapon : MonoBehaviour
                 if (helpvertical >= 1f) // moving right
                 {
                     currfirepoint = firepoint_right;
-                    rightfirepoint.ChosenFirepoint();
+                    rightfirepoint.ChosenFirepoint(spell);
                     leftfirepoint.NotChosenFirepoint();
                 }
                 else
                 { // moving upwards/downwards
                     currfirepoint = firepoint_left;
-                    leftfirepoint.ChosenFirepoint();
+                    leftfirepoint.ChosenFirepoint(spell);
                     rightfirepoint.NotChosenFirepoint();
                 }
             }
@@ -91,9 +99,17 @@ public class Weapon : MonoBehaviour
         else
         { //standing
             currfirepoint = firepoint_left;
-            leftfirepoint.ChosenFirepoint();
+            leftfirepoint.ChosenFirepoint(spell);
             rightfirepoint.NotChosenFirepoint();
         }
+        */
+        
+        /*float tempx = lookDir.x;
+        float tempy = lookDir.y;
+        lookDir.x =  tempy;
+        lookDir.y = -1 * tempx;*/
+
+        
 
 
 
@@ -113,9 +129,12 @@ public class Weapon : MonoBehaviour
 
         }
 
-        
-
-       
+        animatorl.SetInteger("spell", spell);
+        animatorr.SetInteger("spell", spell);
+        //Debug.Log("Currentfirerate: "+currentfirerate);
+        animatorl.speed = currentfirerate;
+        animatorr.speed = currentfirerate;
+        Debug.Log(animatorl.speed);
 
         if (allowfire)
         {
@@ -123,6 +142,39 @@ public class Weapon : MonoBehaviour
             StartCoroutine(ShootingCoroutine());
             
         }
+    }
+
+    /* private void FixedUpdate()
+     {
+         Vector2 lookDir = mousePos - rb.position;
+         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+         if ((angle <= 0) && (angle >= -180)) //between 0 and -180 mouse at the right
+         {
+             Debug.Log("rechts");
+             currfirepoint = firepoint_right;
+             rightfirepoint.ChosenFirepoint(spell);
+             leftfirepoint.NotChosenFirepoint();
+         }
+         else
+         {
+             Debug.Log("links");
+             currfirepoint = firepoint_left;
+             leftfirepoint.ChosenFirepoint(spell);
+             rightfirepoint.NotChosenFirepoint();
+
+         }
+     }*/
+
+    public void Currfirepointleft() {
+        currfirepoint = firepoint_left;
+        leftfirepoint.ChosenFirepoint(spell);
+        rightfirepoint.NotChosenFirepoint();
+    }
+
+    public void Currfirepointright() {
+        currfirepoint = firepoint_right;
+        rightfirepoint.ChosenFirepoint(spell);
+        leftfirepoint.NotChosenFirepoint();
     }
 
     public void ExecuteAction_ChangeWeapon() {
@@ -191,11 +243,12 @@ public class Weapon : MonoBehaviour
 
     IEnumerator ShootingCoroutine()
     {
-        float currentfirerate;
+        
         allowfire = false;
         float helpvertical = movescript.helpvertical;
         float helpspeed = movescript.helpspeed;
         GameObject bullettype;
+        
         switch (spell) {
             case 0:
                 bullettype = bloodbulletPrefab;
@@ -209,6 +262,10 @@ public class Weapon : MonoBehaviour
                 float help2 = (1f / currentfirerate);
                 astext.GetComponent<TMPro.TextMeshProUGUI>().text = help2.ToString();
                 datext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Weapon>().currentdamage.ToString();
+                animatorl.Play("Base Layer.Machinegun");
+                animatorr.Play("Base Layer.Machinegun");
+                rightfirepoint.sprite.sprite = rightfirepoint.machinegun;
+                leftfirepoint.sprite.sprite = leftfirepoint.machinegun;
                 break;
             case 1:
                 bullettype = lightbulletPrefab;
@@ -217,6 +274,11 @@ public class Weapon : MonoBehaviour
                 float help3 = (1f / currentfirerate);
                 astext.GetComponent<TMPro.TextMeshProUGUI>().text = help3.ToString();
                 datext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Weapon>().currentdamage.ToString();
+                animatorl.Play("Base Layer.Icegun");
+                animatorr.Play("Base Layer.Icegun");
+                rightfirepoint.sprite.sprite = rightfirepoint.icegun;
+                leftfirepoint.sprite.sprite = leftfirepoint.icegun;
+
                 break;
             default:
                 bullettype = waterbulletPrefab;
@@ -225,8 +287,14 @@ public class Weapon : MonoBehaviour
                 float help4 = (1f / currentfirerate);
                 astext.GetComponent<TMPro.TextMeshProUGUI>().text = help4.ToString();
                 datext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Weapon>().currentdamage.ToString();
+                animatorl.Play("Base Layer.Flamethrower");
+                animatorr.Play("Base Layer.Flamethrower");
+                
+                rightfirepoint.sprite.sprite = rightfirepoint.flamethrower;
+                leftfirepoint.sprite.sprite = leftfirepoint.flamethrower;
                 break;
         }
+
         /*Transform currfirepoint;
         if (helpspeed > 0.01f)
         {
@@ -286,6 +354,7 @@ public class Weapon : MonoBehaviour
             }
 
         }
+        
         yield return new WaitForSeconds(currentfirerate);
         allowfire = true;
     }

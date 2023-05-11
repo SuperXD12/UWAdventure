@@ -14,6 +14,8 @@ using Random = UnityEngine.Random;
 
 public class GameLogic : MonoBehaviour
 {
+
+    public Font font;
     public GameObject pollnametext;
     public GameObject player;
     public Upgradehandling uh;
@@ -38,12 +40,19 @@ public class GameLogic : MonoBehaviour
     public GameObject highptext;
     private int currentvotesforboss;
     private int currentviewers;
+    private System.Random rnd;
 
+    private GameObject currenttobespawned;
+    private int currenttobespawnednumber;
     private IEnumerator coroutine;
     // Start is called before the first frame update
     void Start()
     {
-        
+        rnd = new System.Random();
+        currenttobespawned = fishenemy;
+        currenttobespawnednumber = 0;
+        font.material.mainTexture.filterMode = FilterMode.Point;
+
         currentviewers = 1;
         currentvotesforboss = 0;
         if ((PlayerPrefs.HasKey("highscore_points") )&& (PlayerPrefs.HasKey("highscore_waves"))){
@@ -149,6 +158,63 @@ public class GameLogic : MonoBehaviour
         Debug.Log("Next Wave");
         StartCoroutine(NextWave());
 
+    }
+
+    public void Action_SpawnMonsterCrowd(int viewercount) {
+        for (int i = 1; i < 4; i++) {
+            Vector3 center = player.transform.position;
+            //Debug.Log("SpawnEnemy Player Center: " + center);
+            int a = Random.Range(1, 360);
+            Vector3 pos = RandomCircle(center, 20, a);
+            GameObject tempenemy = Instantiate(currenttobespawned, pos, Quaternion.identity);
+        }
+        
+    }
+
+    public void Action_ChangeMonsterType(int viewercount) {
+        int chosen = rnd.Next(1, 3);//1,2 //0=fish 1=seahorse 2=slime
+        if (currenttobespawnednumber == 0)
+        {
+            
+            currenttobespawnednumber = chosen;
+            if (chosen == 1)
+            {
+                currenttobespawned = strongerenemy;
+            }
+            else {
+                currenttobespawned = blueslime;
+            }
+        }
+        else
+        {
+            if (currenttobespawnednumber == 1)
+            {
+                if (chosen == 1)
+                {
+                    currenttobespawned = fishenemy;
+                    currenttobespawnednumber = 0;
+                }
+                else
+                {
+                    currenttobespawned = blueslime;
+                    currenttobespawnednumber = 2;
+                }
+            }
+            else
+            { 
+                if (chosen == 1)
+                {
+                    currenttobespawnednumber = 0;
+                    currenttobespawned = fishenemy;
+                }
+                else
+                {
+                    currenttobespawnednumber = 1;
+                    currenttobespawned = strongerenemy;
+                }
+
+            }
+        }
     }
 
     public void Action_VoteforBoss(int viewercount) {

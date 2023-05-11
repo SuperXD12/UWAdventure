@@ -10,6 +10,7 @@ public class Action_CommandList : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         player = GameObject.FindGameObjectWithTag("Player");
         gamelogic = GameObject.FindGameObjectWithTag("GameLogic");
     }
@@ -33,6 +34,18 @@ public class Action_CommandList : MonoBehaviour
 
     public void Action_VoteSpawnBoss(int viewercount) {
         gamelogic.GetComponent<GameLogic>().Action_VoteforBoss(viewercount);
+    }
+
+    public void Action_SpawnMonsterCrowd(int viewercount) {
+        gamelogic.GetComponent<GameLogic>().Action_SpawnMonsterCrowd(viewercount);
+    }
+
+    public void Action_ChangeMonsterType(int viewercount) {
+        gamelogic.GetComponent<GameLogic>().Action_ChangeMonsterType(viewercount);
+    }
+
+    public void Action_HealPlayer(int viewercount) {
+        player.GetComponent<Health>().Heal(200);
     }
 
 }

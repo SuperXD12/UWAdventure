@@ -21,6 +21,15 @@ public class VotingsO
 }
 
 [Serializable]
+public class VotingsP
+{
+    public string id;
+    public int votes;
+    public string voterid;
+    public string votername;
+}
+
+[Serializable]
 public class PutPollName
 {
     //public string id;
@@ -44,7 +53,10 @@ public class JsonResponseType
 public class VotingLogic : MonoBehaviour
 {
     public GameObject text_voteannouncement;
+
+    public GameObject voteannouncementobject;
     public Toggle toggle;
+    public GameObject votingdisplay;
 
     private GameObject gamelogic;
     
@@ -54,6 +66,9 @@ public class VotingLogic : MonoBehaviour
 
     static readonly HttpClient client = new HttpClient();
     private int changeweapon_votes;
+    private int spawnmonster_votes;
+    private int changemonster_votes;
+    public int healplayer_votes;
     private int voteboss_votes;
     private int tempbuffdmgplayer_votes;
     private int votinglength;
@@ -110,11 +125,11 @@ public class VotingLogic : MonoBehaviour
     void Start()
     {
         allowLeaderboard = true;
-        currentPollNumber = 1;
+        currentPollNumber = 0;
         currentPollName = currentPollNumber.ToString();
         votingsetting = false;
         gamelogic = GameObject.FindGameObjectWithTag("GameLogic");
-        votinglength = 10000;
+        votinglength = 15000;
         voted = true;
         changeweapon_votes = 0;
         voteboss_votes = 0;
@@ -129,14 +144,17 @@ public class VotingLogic : MonoBehaviour
             ResetUids();
         }
 
-        if (votingsetting) {
+        if (votingsetting)
+        {
             if (voted)
             {
+                
                 ResetUids();
                 VotingStopTheCount();
                 ResetUids();
             }
         }
+        
 
         if (allowLeaderboard) {
             StartCoroutine(LeaderboardRefresh());
@@ -148,6 +166,7 @@ public class VotingLogic : MonoBehaviour
 
     public void Voting_Setting() {
         votingsetting = toggle.GetComponent<Toggle>().isOn;
+        votingdisplay.SetActive(votingsetting);
         Debug.Log("Changed Voting Setting to " + votingsetting.ToString());
     }
 
@@ -157,6 +176,9 @@ public class VotingLogic : MonoBehaviour
         ResetVotes("A");
         ResetVotes("B");
         ResetVotes("C");
+        ResetVotes("D");
+        ResetVotes("E");
+        ResetVotes("F");
         ResetUids();
         /*if (currentPollName == "Fish")
         {
@@ -172,7 +194,7 @@ public class VotingLogic : MonoBehaviour
             }
         }*/
         currentPollNumber += 1;
-        currentPollName = currentPollNumber.ToString();
+        currentPollName = (currentPollNumber+1).ToString();
         PutPollName(currentPollName);
         await Task.Delay(votinglength);
 
@@ -193,26 +215,82 @@ public class VotingLogic : MonoBehaviour
         voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
         tempbuffdmgplayer_votes = voteson.votes;
 
+        jsonResponse = await VotingSubRoutine("D");
+        Debug.Log(jsonResponse);
+        voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
+        spawnmonster_votes = voteson.votes;
+
+        jsonResponse = await VotingSubRoutine("E");
+        Debug.Log(jsonResponse);
+        voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
+        changemonster_votes = voteson.votes;
+
+        jsonResponse = await VotingSubRoutine("F");
+        Debug.Log(jsonResponse);
+        voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
+        healplayer_votes = voteson.votes;
+
         //int viewercount = await GetCurrentViewercount();
 
         Debug.Log(changeweapon_votes);
         Debug.Log(voteboss_votes);
         Debug.Log(tempbuffdmgplayer_votes);
+        Debug.Log(spawnmonster_votes);
+        Debug.Log(changemonster_votes);
+        Debug.Log(healplayer_votes);
         string voteresult = "";
 
-        if (changeweapon_votes != 0 || voteboss_votes != 0 || tempbuffdmgplayer_votes != 0)
+        if (changeweapon_votes != 0 || voteboss_votes != 0 || tempbuffdmgplayer_votes != 0 || spawnmonster_votes != 0 || changemonster_votes != 0 || healplayer_votes != 0)
         {
-            if (changeweapon_votes > voteboss_votes)
+            string max =
+                 new[] {
+                     Tuple.Create(changeweapon_votes, "A"),
+                     Tuple.Create(voteboss_votes, "B"),
+                     Tuple.Create(tempbuffdmgplayer_votes, "C"),
+                     Tuple.Create(spawnmonster_votes, "D"),
+                     Tuple.Create(changemonster_votes, "E"),
+                     Tuple.Create(healplayer_votes, "F"),
+                 }.Max()
+                  .Item2;
+            switch (max) {
+                case "A":
+                    gamelogic.GetComponent<Action_CommandList>().Action_ChangeWeapon();
+                    voteresult = "Change to a random weapon";
+                    break;
+                case "B":
+                    gamelogic.GetComponent<Action_CommandList>().Action_VoteSpawnBoss(1);
+                    voteresult = "A potential boss monster";
+                    break;
+                case "C":
+                    gamelogic.GetComponent<Action_CommandList>().Action_IncreasePlayerDamage(1);
+                    voteresult = "Temporary player damage buff";
+                    break;
+                case "D":
+                    gamelogic.GetComponent<Action_CommandList>().Action_SpawnMonsterCrowd(1);
+                    voteresult = "Spawn a monster crowd";
+                    break;
+                case "E":
+                    gamelogic.GetComponent<Action_CommandList>().Action_ChangeMonsterType(1);
+                    voteresult = "Change the spawned monster type of the viewers";
+                    break;
+                case "F":
+                    gamelogic.GetComponent<Action_CommandList>().Action_HealPlayer(1);
+                    voteresult = "Heal the Player by a small amount";
+                    break;
+
+            }
+            /*if (changeweapon_votes > voteboss_votes) //changeweapon||tempbuffplayer||spawnmonster||changemonster||healplayer
             {
-                if (changeweapon_votes > tempbuffdmgplayer_votes)//changeweapon_votes
+                if (changeweapon_votes > tempbuffdmgplayer_votes)//changeweapon_votes||spawnmonster||changemonster||healplayer
                 {
+                    if(changeweapon_votes)
                     gamelogic.GetComponent<Action_CommandList>().Action_ChangeWeapon();
                     voteresult = "Change to a random weapon";
                 }
                 else //tempbuffdmgplayer_votes
                 {
                     gamelogic.GetComponent<Action_CommandList>().Action_IncreasePlayerDamage(1);
-                    voteresult = "Temporary buff the players damage";
+                    voteresult = "Temporary player damage buff";
                 }
             }
             else
@@ -220,17 +298,17 @@ public class VotingLogic : MonoBehaviour
                 if (voteboss_votes > tempbuffdmgplayer_votes) //voteboss_votes
                 {
                     gamelogic.GetComponent<Action_CommandList>().Action_VoteSpawnBoss(1);
-                    voteresult = "One vote for a boss monster has been added";
+                    voteresult = "A potential boss monster";
                 }
                 else //tempbuffdmgplayer_votes
                 {
                     gamelogic.GetComponent<Action_CommandList>().Action_IncreasePlayerDamage(1);
-                    voteresult = "Temporary buff the players damage";
+                    voteresult = "Temporary player damage buff";
                 }
-            }
-            
-            text_voteannouncement.GetComponent<TMPro.TextMeshProUGUI>().text = "It was voted for " + voteresult + "\nVotes: A " + changeweapon_votes.ToString() + " |B " + voteboss_votes.ToString() + " |C " + tempbuffdmgplayer_votes.ToString();
+            }*/
 
+            //text_voteannouncement.GetComponent<TMPro.TextMeshProUGUI>().text = "It was voted for " + voteresult + "\nVotes: A " + changeweapon_votes.ToString() + " |B " + voteboss_votes.ToString() + " |C " + tempbuffdmgplayer_votes.ToString();
+            StartCoroutine(VoteAnnouncement("Poll "+currentPollName+" voted for:\n"+voteresult));
             
 
         }
@@ -268,9 +346,9 @@ public class VotingLogic : MonoBehaviour
                 tempname = tempname.Remove(tempname.Length - 1);
                 viewerdata.Add(tempname, int.Parse(temp[1]));
             }
-
+            var sortedDict = from entry in viewerdata orderby entry.Value descending select entry;
             int i = 0;
-            foreach (KeyValuePair<string, int> curr in viewerdata) {
+            foreach (KeyValuePair<string, int> curr in sortedDict) {
                 if (i < 20)
                 {
                     switch (i) {
@@ -356,6 +434,7 @@ public class VotingLogic : MonoBehaviour
                             break;
 
                     }
+                    i += 1;
                 }
                 else {
                     break;
@@ -370,6 +449,13 @@ public class VotingLogic : MonoBehaviour
        
     }
 
+    IEnumerator VoteAnnouncement(string message) {
+        text_voteannouncement.GetComponent<TMPro.TextMeshProUGUI>().text = message;
+        voteannouncementobject.SetActive(true);
+        yield return new WaitForSeconds(5f);
+        voteannouncementobject.SetActive(false);
+    }
+
     IEnumerator LeaderboardRefresh() {
         allowLeaderboard = false;
         SetLeaderboard();
@@ -379,9 +465,11 @@ public class VotingLogic : MonoBehaviour
 
     public async void ResetVotes(string Vid)
     {
-        var votingsformat = new VotingsO();
+        var votingsformat = new VotingsP();
         votingsformat.id = Vid;
         votingsformat.votes = 0;
+        votingsformat.voterid = "origin";
+        votingsformat.votername = "origin";
         string json = JsonConvert.SerializeObject(votingsformat);
         var httpContent = new StringContent(json);
         try
@@ -450,10 +538,10 @@ public class VotingLogic : MonoBehaviour
         
         try
         {
-            Debug.Log(httpContent.ReadAsStringAsync().Result);
+            //Debug.Log(httpContent.ReadAsStringAsync().Result);
             var res = await client.PostAsync("https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/pollname", httpContent);
             res.EnsureSuccessStatusCode();
-            Debug.Log(res.Content.ReadAsStringAsync().Result);
+            //Debug.Log(res.Content.ReadAsStringAsync().Result);
         }
         catch (HttpRequestException e)
         {
