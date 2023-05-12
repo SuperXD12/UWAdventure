@@ -1,20 +1,66 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
+using Newtonsoft.Json;
 public class Action_CommandList : MonoBehaviour
 {
     private GameObject player;
     private GameObject gamelogic;
+    private ClientWebSocket ws;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        ws = new ClientWebSocket();
         player = GameObject.FindGameObjectWithTag("Player");
         gamelogic = GameObject.FindGameObjectWithTag("GameLogic");
+        WebsocketRL();
     }
 
+    private async void WebsocketRL() {
+        await ws.ConnectAsync(new System.Uri("wss://rj347v6u7h.execute-api.eu-central-1.amazonaws.com/production"), CancellationToken.None);
+        byte[] buf = new byte[1056];
+
+        while (ws.State == WebSocketState.Open)
+        {
+            var result = await ws.ReceiveAsync(buf, CancellationToken.None);
+
+            if (result.MessageType == WebSocketMessageType.Close)
+            {
+                await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+                Debug.Log(result.CloseStatusDescription);
+            }
+            else
+            {
+                string answer = Encoding.ASCII.GetString(buf, 0, result.Count);
+                string[] codeandtext = answer.Split(":");
+                if (codeandtext[0] == "1") {
+                    SpawnNamedEnemy(codeandtext[1],(Color.black));
+                    Debug.Log(codeandtext[1]);
+                }
+                
+            }
+        }
+    }
+    [System.Serializable]
+    public class messages
+    {
+        public string action;
+        public string message;
+    }
+    public async void CanVoteAgain() {
+        var obj = new messages
+        {
+            action = "sendmessage",
+            message = "2:a"
+        };
+        var encoded = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
+        var buffer = new System.ArraySegment<System.Byte>(encoded, 0, encoded.Length);
+        await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+    }
     public void Action_ChangeWeapon() {
         player.GetComponent<Weapon>().ExecuteAction_ChangeWeapon();
     }
@@ -46,6 +92,10 @@ public class Action_CommandList : MonoBehaviour
 
     public void Action_HealPlayer(int viewercount) {
         player.GetComponent<Health>().Heal(200);
+    }
+
+    private void SpawnNamedEnemy(string name, Color color) {
+        gamelogic.GetComponent<GameLogic>().SpawnLabeledEnemy(name, color);
     }
 
 }

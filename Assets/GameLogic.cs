@@ -41,6 +41,7 @@ public class GameLogic : MonoBehaviour
     private int currentvotesforboss;
     private int currentviewers;
     private System.Random rnd;
+    public GameObject fishenemylabeled;
 
     private GameObject currenttobespawned;
     private int currenttobespawnednumber;
@@ -220,6 +221,15 @@ public class GameLogic : MonoBehaviour
     public void Action_VoteforBoss(int viewercount) {
         currentvotesforboss += 1;
         currentviewers = viewercount;
+    }
+
+    public void SpawnLabeledEnemy(string name, Color color) {
+        Vector3 center = player.transform.position;
+        //Debug.Log("SpawnEnemy Player Center: " + center);
+        int a = Random.Range(1, 360);
+        Vector3 pos = RandomCircle(center, 20, a);
+        GameObject tempenemy = Instantiate(fishenemylabeled, pos, Quaternion.identity);
+        tempenemy.GetComponent<UiFollowEnemy>().SetName(name, color);
     }
 
     private void SpawnBossMonster() {

@@ -134,7 +134,7 @@ public class Weapon : MonoBehaviour
         //Debug.Log("Currentfirerate: "+currentfirerate);
         animatorl.speed = currentfirerate;
         animatorr.speed = currentfirerate;
-        Debug.Log(animatorl.speed);
+        //Debug.Log(animatorl.speed);
 
         if (allowfire)
         {
