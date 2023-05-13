@@ -149,9 +149,10 @@ public class VotingLogic : MonoBehaviour
             if (voted)
             {
                 
-                ResetUids();
+
                 VotingStopTheCount();
                 ResetUids();
+                //gamelogic.GetComponent<Action_CommandList>().CanVoteAgain();
             }
         }
         
@@ -167,6 +168,13 @@ public class VotingLogic : MonoBehaviour
     public void Voting_Setting() {
         votingsetting = toggle.GetComponent<Toggle>().isOn;
         votingdisplay.SetActive(votingsetting);
+        if (votingsetting)
+        {
+            gamelogic.GetComponent<Action_CommandList>().AllowNamedEnemy();
+        }
+        else {
+            gamelogic.GetComponent<Action_CommandList>().DisallowNamedEnemy();
+        }
         Debug.Log("Changed Voting Setting to " + votingsetting.ToString());
     }
 
@@ -180,6 +188,7 @@ public class VotingLogic : MonoBehaviour
         ResetVotes("E");
         ResetVotes("F");
         ResetUids();
+        gamelogic.GetComponent<Action_CommandList>().CanVoteAgain();
         /*if (currentPollName == "Fish")
         {
             currentPollName = "Seahorse";

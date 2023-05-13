@@ -10,7 +10,7 @@ public class Action_CommandList : MonoBehaviour
     private GameObject player;
     private GameObject gamelogic;
     private ClientWebSocket ws;
-
+    private bool allownamed;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +18,20 @@ public class Action_CommandList : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         gamelogic = GameObject.FindGameObjectWithTag("GameLogic");
         WebsocketRL();
+        allownamed = false;
+}
+
+    void OnDestroy()
+    {
+        //ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game Closed", CancellationToken.None);
+    }
+
+    public void AllowNamedEnemy() {
+        allownamed = true;
+    }
+
+    public void DisallowNamedEnemy() {
+        allownamed = false;
     }
 
     private async void WebsocketRL() {
@@ -30,8 +44,10 @@ public class Action_CommandList : MonoBehaviour
 
             if (result.MessageType == WebSocketMessageType.Close)
             {
+                Debug.Log("CLOSED");
                 await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
-                Debug.Log(result.CloseStatusDescription);
+                
+                
             }
             else
             {
@@ -59,6 +75,7 @@ public class Action_CommandList : MonoBehaviour
         };
         var encoded = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
         var buffer = new System.ArraySegment<System.Byte>(encoded, 0, encoded.Length);
+        //Debug.Log("Send message: 2:a");
         await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
     }
     public void Action_ChangeWeapon() {
@@ -95,6 +112,7 @@ public class Action_CommandList : MonoBehaviour
     }
 
     private void SpawnNamedEnemy(string name, Color color) {
+        if(allownamed)
         gamelogic.GetComponent<GameLogic>().SpawnLabeledEnemy(name, color);
     }
 

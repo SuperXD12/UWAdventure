@@ -90,6 +90,8 @@ public class GameLogic : MonoBehaviour
         }
     }
 
+    
+
     private void FixedUpdate()
     {
         string currentpollname =gameObject.GetComponent<VotingLogic>().GetCurrentPollName();
