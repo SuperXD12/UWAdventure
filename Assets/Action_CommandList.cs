@@ -53,10 +53,12 @@ public class Action_CommandList : MonoBehaviour
             {
                 string answer = Encoding.ASCII.GetString(buf, 0, result.Count);
                 string[] codeandtext = answer.Split(":");
-                if (codeandtext[0] == "1") {
-                    SpawnNamedEnemy(codeandtext[1],(Color.black));
+                if (codeandtext[0] == "1")
+                {
+                    SpawnNamedEnemy(codeandtext[1], (Color.black));
                     Debug.Log(codeandtext[1]);
                 }
+                
                 
             }
         }
