@@ -23,7 +23,7 @@ public class Action_CommandList : MonoBehaviour
 
     void OnDestroy()
     {
-        //ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game Closed", CancellationToken.None);
+        ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game Closed", CancellationToken.None);
     }
 
     public void AllowNamedEnemy() {
@@ -45,7 +45,7 @@ public class Action_CommandList : MonoBehaviour
             if (result.MessageType == WebSocketMessageType.Close)
             {
                 Debug.Log("CLOSED");
-                await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+                //await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
                 
                 
             }
@@ -55,14 +55,25 @@ public class Action_CommandList : MonoBehaviour
                 string[] codeandtext = answer.Split(":");
                 if (codeandtext[0] == "1")
                 {
-                    SpawnNamedEnemy(codeandtext[1], (Color.black));
                     Debug.Log(codeandtext[1]);
+                    Color currentcolor = await gamelogic.GetComponent<VotingLogic>().GetViewerColor(codeandtext[1]);
+                    SpawnNamedEnemy(codeandtext[1], currentcolor);
+                    
+                }
+                else {
+                    if (codeandtext[0] == "3") {
+                        Debug.Log(codeandtext[1]);
+                        string[] nameandcolor = codeandtext[1].Split(",");
+                        gamelogic.GetComponent<VotingLogic>().setColor(nameandcolor[0], nameandcolor[1]);
+                    }
                 }
                 
                 
             }
         }
     }
+
+    
     [System.Serializable]
     public class messages
     {
@@ -114,6 +125,7 @@ public class Action_CommandList : MonoBehaviour
     }
 
     private void SpawnNamedEnemy(string name, Color color) {
+        Debug.Log("SPAWNNAMED");
         if(allownamed)
         gamelogic.GetComponent<GameLogic>().SpawnLabeledEnemy(name, color);
     }

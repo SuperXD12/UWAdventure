@@ -13,12 +13,27 @@ using Newtonsoft.Json;
 using UnityEngine.UI;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 [Serializable]
 public class VotingsO
 {
     public string id;
     public int votes;
+}
+
+[Serializable]
+public class PutSetting
+{
+    public string votername;
+    public int newcolor;
+}
+
+
+    [Serializable]
+public class GetColorSetting
+{
+    public string votername;
 }
 
 [Serializable]
@@ -125,6 +140,7 @@ public class VotingLogic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         allowLeaderboard = true;
         currentPollNumber = 0;
         currentPollName = currentPollNumber.ToString();
@@ -169,6 +185,7 @@ public class VotingLogic : MonoBehaviour
     public void Voting_Setting() {
         votingsetting = toggle.GetComponent<Toggle>().isOn;
         votingdisplay.SetActive(votingsetting);
+        ClearLeaderboard();
         if (votingsetting)
         {
             gamelogic.GetComponent<Action_CommandList>().AllowNamedEnemy();
@@ -209,45 +226,45 @@ public class VotingLogic : MonoBehaviour
         await Task.Delay(votinglength);
 
         string jsonResponse = await VotingSubRoutine("A");
-        Debug.Log(jsonResponse);
+        //Debug.Log(jsonResponse);
         VotingsO voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
         changeweapon_votes = voteson.votes;
 
 
         jsonResponse = await VotingSubRoutine("B");
-        Debug.Log(jsonResponse);
+        //Debug.Log(jsonResponse);
         voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
         voteboss_votes = voteson.votes;
 
 
         jsonResponse = await VotingSubRoutine("C");
-        Debug.Log(jsonResponse);
+        //Debug.Log(jsonResponse);
         voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
         tempbuffdmgplayer_votes = voteson.votes;
 
         jsonResponse = await VotingSubRoutine("D");
-        Debug.Log(jsonResponse);
+        //Debug.Log(jsonResponse);
         voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
         spawnmonster_votes = voteson.votes;
 
         jsonResponse = await VotingSubRoutine("E");
-        Debug.Log(jsonResponse);
+        //Debug.Log(jsonResponse);
         voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
         changemonster_votes = voteson.votes;
 
         jsonResponse = await VotingSubRoutine("F");
-        Debug.Log(jsonResponse);
+        //Debug.Log(jsonResponse);
         voteson = JsonUtility.FromJson<VotingsO>(jsonResponse);
         healplayer_votes = voteson.votes;
 
         //int viewercount = await GetCurrentViewercount();
 
-        Debug.Log(changeweapon_votes);
-        Debug.Log(voteboss_votes);
-        Debug.Log(tempbuffdmgplayer_votes);
-        Debug.Log(spawnmonster_votes);
-        Debug.Log(changemonster_votes);
-        Debug.Log(healplayer_votes);
+        //Debug.Log(changeweapon_votes);
+        //Debug.Log(voteboss_votes);
+        //Debug.Log(tempbuffdmgplayer_votes);
+        //Debug.Log(spawnmonster_votes);
+        //Debug.Log(changemonster_votes);
+       // Debug.Log(healplayer_votes);
         string voteresult = "";
 
         if (changeweapon_votes != 0 || voteboss_votes != 0 || tempbuffdmgplayer_votes != 0 || spawnmonster_votes != 0 || changemonster_votes != 0 || healplayer_votes != 0)
@@ -345,15 +362,99 @@ public class VotingLogic : MonoBehaviour
             case 7:
                 return new Color(244, 103, 241, 1f); //pink
             case 8:
-                return Color.blue;
+                return new Color(255f, 165f, 0f,1f); //orange
 
             default:
                 return Color.white;
             }
     }
 
+    private void ClearLeaderboard() {
 
-    
+        scoreboardtop1.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount1.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop1.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop2.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount2.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop2.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop3.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount3.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop3.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+        
+        scoreboardtop4.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount4.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop4.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop5.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount5.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop5.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+        
+        scoreboardtop6.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount6.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop6.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+        
+        scoreboardtop7.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount7.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop7.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+        
+        scoreboardtop8.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount8.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop8.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+        
+        scoreboardtop9.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount9.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop9.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+        
+        scoreboardtop10.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount10.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop10.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop11.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount11.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop11.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop12.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount12.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop12.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+        
+        scoreboardtop13.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount13.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop13.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+       
+        scoreboardtop14.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount14.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop14.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop15.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount15.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop15.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop16.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount16.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop16.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop17.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount17.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop17.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop18.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount18.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop18.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop19.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount19.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop19.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+        scoreboardtop20.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scorecount20.GetComponent<TMPro.TextMeshProUGUI>().text = "";
+        scoreboardtop20.GetComponent<TMPro.TextMeshProUGUI>().color = Color.white;
+
+    }
+
+
+
     public async void SetLeaderboard() {
         
         try
@@ -417,6 +518,7 @@ public class VotingLogic : MonoBehaviour
                 string[] tempv = temp[1].Split("~");
                 tempv[0] = tempv[0].Substring(1);
                 tempv[1] = tempv[1].Remove(tempv[1].Length - 1);
+                //Debug.Log(tempv[1]);
                 Tuple<int, int> datanc = new Tuple<int, int>(int.Parse(tempv[0]), int.Parse(tempv[1]));
                 viewerdata.Add(tempname,datanc);
             }
@@ -579,6 +681,59 @@ public class VotingLogic : MonoBehaviour
         }
     }
 
+    public async Task<Color> GetViewerColor(string name) {
+
+        var votingsformat = new GetColorSetting();
+        votingsformat.votername = name;
+        string json = JsonConvert.SerializeObject(votingsformat);
+        json = JsonConvert.SerializeObject(json);
+        json = "{\"body\": " + json + "}";
+        //Debug.Log("SETCOLOR: "+json);
+        var httpContent = new StringContent(json); 
+
+        try
+        {
+            var res = await client.PostAsync("https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/viewerinformations/oneviewerinformation", httpContent);
+            res.EnsureSuccessStatusCode();
+            var jsonResponse = res.Content.ReadAsStringAsync().Result;
+            JObject obj = JObject.Parse(jsonResponse);
+            //Debug.Log(obj["body"].ToString());
+
+            return parseColor(int.Parse(obj["body"].ToString()));
+
+        }
+        catch (HttpRequestException e)
+        {
+            
+            Debug.Log("Exception Caught " + e.Message);
+            return Color.black;
+        }
+    }
+
+
+    public async void setColor(string name, string x)
+    {
+        var votingsformat = new PutSetting();
+        votingsformat.votername = name;
+        votingsformat.newcolor= int.Parse(x);
+        string json = JsonConvert.SerializeObject(votingsformat);
+        json = JsonConvert.SerializeObject(json);
+        json = "{\"body\": " + json + "}";
+        //Debug.Log("SETCOLOR: "+json);
+        var httpContent = new StringContent(json);
+        try
+        {
+
+            var res = await client.PostAsync("https://5kl9amlvjh.execute-api.eu-central-1.amazonaws.com/prod/viewerinformations/oneviewerinformation/putviewerinformations", httpContent);
+            res.EnsureSuccessStatusCode();
+            //Debug.Log(res.Content.ReadAsStringAsync().Result);
+        }
+        catch (HttpRequestException e)
+        {
+            Debug.Log("Exception Caught " + e.Message);
+        }
+    }
+
     public async void ResetUids()
     {
         
@@ -628,6 +783,7 @@ public class VotingLogic : MonoBehaviour
         json = JsonConvert.SerializeObject(json);
         json = "{\"body\": " + json + "}";
         //json = "{\"body\": \"{\\\"Pollname\\\":\\\"G\\\"}\"}";
+        //Debug.Log("PUTPOLLNAME: " + json);
         var httpContent = new StringContent(json);
         
         try
