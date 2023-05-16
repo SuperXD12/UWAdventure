@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private int damage = 5;
+    private int damage;
     private float speed;
     [SerializeField]
     private EnemyData data;
@@ -32,6 +32,7 @@ public class Enemy : MonoBehaviour
     }
 
     public void SetEnemyValues() {
+        //Debug.Log("SET ENEMY VALUES: HP:" + data.hp + "| DMG:"+data.damage+"| SPD:"+data.speed);
         GetComponent<Health>().SetHealth(data.hp, data.hp);
         damage = data.damage;
         speed = data.speed;
@@ -43,7 +44,7 @@ public class Enemy : MonoBehaviour
     }
 
     public void gotHit() {
-        int damagetobedone =player.GetComponent<Weapon>().currentdamage;
+        int damagetobedone =player.GetComponent<Weapon>().getCurrentDamage();
         //print("Enemy got hit with " + damagetobedone);
         this.GetComponent<Health>().Damage(damagetobedone);
     }

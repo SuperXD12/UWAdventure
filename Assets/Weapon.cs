@@ -48,10 +48,10 @@ public class Weapon : MonoBehaviour
 
     
 
-    public float bulletForce = 10f;
-    public int votinglength = 30000;
-    public int currentdamage = 500;
-    public int basedamage = 500;
+    private float bulletForce;
+    //private int votinglength;
+    private int currentdamage;
+    private int basedamage;
     private System.Random rnd;
 
     private Transform currfirepoint;
@@ -60,9 +60,10 @@ public class Weapon : MonoBehaviour
         firerate = 1f;
         spell = 0;
         bulletForce = 10f;
-        votinglength = 30000;
+        //votinglength = 30000;
         currentdamage = 500;
         basedamage = 500;
+        currentfirerate = firerate;
         rnd = new System.Random();
     }
 
@@ -165,6 +166,10 @@ public class Weapon : MonoBehaviour
          }
      }*/
 
+
+    public int getCurrentDamage() {
+        return currentdamage;
+    }
     public void Currfirepointleft() {
         currfirepoint = firepoint_left;
         leftfirepoint.ChosenFirepoint(spell);
@@ -239,7 +244,9 @@ public class Weapon : MonoBehaviour
         
     }
 
-    
+    public void gotHit(int x) {
+        gameObject.GetComponent<Health>().Damage(x);
+    }
 
     IEnumerator ShootingCoroutine()
     {

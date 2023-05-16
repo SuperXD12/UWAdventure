@@ -7186,7 +7186,7 @@ MonoBehaviour:
   text: {fileID: 1682200290}
   bloodbulletPrefab: {fileID: 8697722832781687757, guid: 28851bad76a518c4b8e30ff2997c1f13, type: 3}
   lightbulletPrefab: {fileID: 8697722832781687757, guid: 63f96f478d24ea84e858959bb36c7937, type: 3}
-  waterbulletPrefab: {fileID: 6319424041957128766, guid: 6d24b5cafb4785148a85ae847a1bcfcf, type: 3}
+  waterbulletPrefab: {fileID: 6319424041957128766, guid: bad8430a67f849d47bc551d24fa3b446, type: 3}
   firepoint_right: {fileID: 592120355}
   rightfirepoint: {fileID: 592120356}
   leftfirepoint: {fileID: 1066170589}
@@ -7199,10 +7199,6 @@ MonoBehaviour:
   movescript: {fileID: 956342671}
   datext: {fileID: 1390742271}
   astext: {fileID: 1661530644}
-  bulletForce: 10
-  votinglength: 15000
-  currentdamage: 500
-  basedamage: 500
 --- !u!61 &956342677
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7216,7 +7212,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.14892071, y: 0.003203392}
+  m_Offset: {x: -0.14589033, y: -0.02710092}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -7227,7 +7223,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.3478721, y: 2.0407977}
+  m_Size: {x: 1.1963506, y: 1.8710935}
   m_EdgeRadius: 0
 --- !u!114 &956342678
 MonoBehaviour:
@@ -7241,7 +7237,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae34f390db7388b4e94cda93f3583f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10000
   gameLogic: {fileID: 263182033}
 --- !u!114 &956342679
 MonoBehaviour:
@@ -15391,9 +15386,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1461396745}
     - target: {fileID: 2539583867933076554, guid: 5e8a8f215cc6d0e4ea0f8329a299aacf, type: 3}
+      propertyPath: darkbatenemy
+      value: 
+      objectReference: {fileID: 4912304004390309491, guid: f539f33ba85dfa5419efa5d01e28dc20, type: 3}
+    - target: {fileID: 2539583867933076554, guid: 5e8a8f215cc6d0e4ea0f8329a299aacf, type: 3}
       propertyPath: pollnametext
       value: 
       objectReference: {fileID: 634202557}
+    - target: {fileID: 2539583867933076554, guid: 5e8a8f215cc6d0e4ea0f8329a299aacf, type: 3}
+      propertyPath: pinkSkullBoss
+      value: 
+      objectReference: {fileID: 5470169704100779042, guid: b1964579e8d51194a87af70fd982fe4e, type: 3}
     - target: {fileID: 2539583867933076554, guid: 5e8a8f215cc6d0e4ea0f8329a299aacf, type: 3}
       propertyPath: strongerenemy
       value: 

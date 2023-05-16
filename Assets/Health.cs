@@ -4,9 +4,18 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class Health : MonoBehaviour
 {
-    public int health = 100;
-    private int MAX_HEALTH = 100;
+    private int health;
+    private int MAX_HEALTH;
     public GameObject gameLogic;
+
+    private void Start()
+    {
+        if (gameObject.tag == "Player") {
+            health = 10000;
+            MAX_HEALTH = 10000;
+        }
+        
+    }
 
     // Update is called once per frame
     void Update()
@@ -14,10 +23,11 @@ public class Health : MonoBehaviour
         
     }
 
-    public void SetHealth(int maxHealth, int health)
+    public void SetHealth(int maxHealth, int healthn)
     {
-        this.MAX_HEALTH = maxHealth;
-        this.health = health;
+        MAX_HEALTH = maxHealth;
+        //Debug.Log("New HP:" + healthn);
+        health = healthn;
     }
 
     // Added for Visual Indicators

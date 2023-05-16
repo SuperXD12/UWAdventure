@@ -8,7 +8,7 @@ public class Shotgun_Flying : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        animator.Play("New State");
+        animator.Play("purple_projectile");
     }
 
     // Update is called once per frame

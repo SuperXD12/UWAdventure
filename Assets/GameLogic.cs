@@ -19,14 +19,16 @@ public class GameLogic : MonoBehaviour
     public GameObject pollnametext;
     public GameObject player;
     public Upgradehandling uh;
-    private int Numberofenemiestospawn = 5;
-    private int numberofstrongenemies = 0;
+    private int Numberofenemiestospawn;
+    private int numberofstrongenemies;
     public GameObject blueslime;
     public GameObject fishenemy;
     public GameObject strongerenemy;
     public EnemyData fishenemystats;
     public EnemyData strongerenemystats;
-    private float currentenemyrate = 10f;
+    public EnemyData darkbatstats;
+    public EnemyData pinkSkullstats;
+    private float currentenemyrate;
     private int wave = 1;
     public GameObject wavetext;
     public GameObject astext;
@@ -42,18 +44,25 @@ public class GameLogic : MonoBehaviour
     private int currentviewers;
     private System.Random rnd;
     public GameObject fishenemylabeled;
+    public GameObject pinkSkullBoss;
+    public GameObject darkbatenemy;
+    
 
     private GameObject currenttobespawned;
     private int currenttobespawnednumber;
+    private int numberofdarkbats;
     private IEnumerator coroutine;
     // Start is called before the first frame update
     void Start()
     {
+        Numberofenemiestospawn = 3;
+        numberofstrongenemies = 0;
+        numberofdarkbats=0;
         rnd = new System.Random();
-        currenttobespawned = fishenemy;
+        currenttobespawned = darkbatenemy;
         currenttobespawnednumber = 0;
         font.material.mainTexture.filterMode = FilterMode.Point;
-
+        currentenemyrate = 10f;
         currentviewers = 1;
         currentvotesforboss = 0;
         if ((PlayerPrefs.HasKey("highscore_points") )&& (PlayerPrefs.HasKey("highscore_waves"))){
@@ -65,12 +74,12 @@ public class GameLogic : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = -1;
-        coroutine = SpawnEnemy(currentenemyrate, fishenemy,strongerenemy);
+        coroutine = SpawnEnemy(currentenemyrate, fishenemy,strongerenemy,darkbatenemy);
         StartCoroutine(coroutine);
         StartCoroutine(NextWave());
         float help = (1f / player.GetComponent<Weapon>().firerate);
         astext.GetComponent<TMPro.TextMeshProUGUI>().text = help.ToString();
-        datext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Weapon>().currentdamage.ToString();
+        datext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Weapon>().getCurrentDamage().ToString();
         mstext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<playermovement>().mSpeed.ToString();
     }
 
@@ -128,20 +137,33 @@ public class GameLogic : MonoBehaviour
         uh.GainUpgradePoint();
         int k = wave % 5;
         if (k == 0) {
-            fishenemystats.speed += 0.25f;
-            numberofstrongenemies = wave / 5;
+            //fishenemystats.speed += 0.25f;
+            if (numberofstrongenemies <= 100)
+            numberofstrongenemies += 1;
+            fishenemystats.hp += 100;
+            strongerenemystats.hp += 100;
+            darkbatstats.hp += 100;
+            pinkSkullstats.hp += 200;
+            
+        }
+        int u = wave % 3;
+        if (u == 0) {
+            if (numberofdarkbats <=100)
+            numberofdarkbats += 1;
         }
         int l = wave % 10;
         if ((l == 0) && (currentenemyrate>3.5f)) {
-            fishenemystats.hp += 100;
-            strongerenemystats.hp += 100;
+            fishenemystats.speed += 0.5f;
+            darkbatstats.speed += 0.5f;
+            pinkSkullstats.speed += 0.5f;
             currentenemyrate -= 0.5f;
             Debug.Log("HIGHER ENEMY RATE");
         }
 
         wavetext.GetComponent<TMPro.TextMeshProUGUI>().text = "Wave: " + wave.ToString();
         //StopCoroutine(coroutine);
-        if (Numberofenemiestospawn <= 100)
+        int p = wave % 2;
+        if ((Numberofenemiestospawn <= 100) && (p==0))
         {
             Numberofenemiestospawn = (Numberofenemiestospawn + 1);
         }
@@ -170,6 +192,7 @@ public class GameLogic : MonoBehaviour
             int a = Random.Range(1, 360);
             Vector3 pos = RandomCircle(center, 20, a);
             GameObject tempenemy = Instantiate(currenttobespawned, pos, Quaternion.identity);
+            tempenemy.GetComponent<SpriteRenderer>().color = Color.red;
         }
         
     }
@@ -194,7 +217,7 @@ public class GameLogic : MonoBehaviour
             {
                 if (chosen == 1)
                 {
-                    currenttobespawned = fishenemy;
+                    currenttobespawned = darkbatenemy;
                     currenttobespawnednumber = 0;
                 }
                 else
@@ -208,7 +231,7 @@ public class GameLogic : MonoBehaviour
                 if (chosen == 1)
                 {
                     currenttobespawnednumber = 0;
-                    currenttobespawned = fishenemy;
+                    currenttobespawned = darkbatenemy;
                 }
                 else
                 {
@@ -240,29 +263,39 @@ public class GameLogic : MonoBehaviour
         //Debug.Log("SpawnEnemy Player Center: " + center);
         int a = Random.Range(1, 360);
         Vector3 pos = RandomCircle(center, 20, a);
-        GameObject tempenemy = Instantiate(blueslime, pos, Quaternion.identity);
+        GameObject tempenemy = Instantiate(pinkSkullBoss, pos, Quaternion.identity);
     }
 
-    private IEnumerator SpawnEnemy(float interval, GameObject enemy, GameObject strongenemy) {
+    private IEnumerator SpawnEnemy(float interval, GameObject enemy, GameObject strongenemy, GameObject darkbat) {
         
         //the actual spawning:
         for (int x = 0; x < Numberofenemiestospawn; x++) {
             Vector3 center = player.transform.position;
             //Debug.Log("SpawnEnemy Player Center: " + center);
             int a = Random.Range(1,360);
-            Vector3 pos = RandomCircle(center, 20, a);
+            Vector3 pos = RandomCircle(center, 15, a);
             GameObject tempenemy = Instantiate(enemy, pos, Quaternion.identity);
         }
-
+        yield return new WaitForSeconds(interval/3f);
         for (int x = 0; x < numberofstrongenemies; x++) {
             Vector3 center = player.transform.position;
             //Debug.Log("SpawnEnemy Player Center: " + center);
             int a = Random.Range(1, 360);
-            Vector3 pos = RandomCircle(center, 10, a);
+            Vector3 pos = RandomCircle(center, 20, a);
             GameObject tempenemy = Instantiate(strongenemy, pos, Quaternion.identity);
         }
-        yield return new WaitForSeconds(interval);
-        StartCoroutine(SpawnEnemy(interval, enemy, strongenemy));
+        yield return new WaitForSeconds(interval/3f);
+        for (int x = 0; x < numberofdarkbats; x++)
+        {
+            Vector3 center = player.transform.position;
+            //Debug.Log("SpawnEnemy Player Center: " + center);
+            int a = Random.Range(1, 360);
+            Vector3 pos = RandomCircle(center, 20, a);
+            GameObject tempenemy = Instantiate(darkbat, pos, Quaternion.identity);
+        }
+        yield return new WaitForSeconds(interval/3f);
+
+        StartCoroutine(SpawnEnemy(interval, enemy, strongenemy,darkbat));
     }
 
     private Vector3 RandomCircle(Vector3 center, float radius, int a) {

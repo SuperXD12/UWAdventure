@@ -54,7 +54,7 @@ public class Upgradehandling : MonoBehaviour
         if (Upgradable()){
             player.GetComponent<Weapon>().IncreaseDamage(amount * 50);
             Debug.Log("Successfully upgraded Damage");
-            datext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Weapon>().currentdamage.ToString();
+            datext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Weapon>().getCurrentDamage().ToString();
         }
         
     }
