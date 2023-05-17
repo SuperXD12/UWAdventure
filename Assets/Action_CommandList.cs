@@ -99,9 +99,10 @@ public class Action_CommandList : MonoBehaviour
         StartCoroutine(TimedBuffDamage(viewercount));
     }
     private IEnumerator TimedBuffDamage(int viewercount) {
-        int damagebuff = Mathf.RoundToInt(50 * Mathf.Min(1, 10 / viewercount));
+        //int damagebuff = Mathf.RoundToInt(50 * Mathf.Min(1, 10 / viewercount));
+        int damagebuff = 500;
         player.GetComponent<Weapon>().IncreaseDamage(damagebuff);
-        float time = 10f * Mathf.Min(1, 10 / viewercount);
+        float time = 10f;//10f * Mathf.Min(1, 10 / viewercount);
         Debug.Log("Temporarily Increased the Damage of the Player by " + damagebuff + " for "+time+" seconds");
         yield return new WaitForSeconds(time);
         player.GetComponent<Weapon>().IncreaseDamage(damagebuff*-1);
@@ -121,11 +122,20 @@ public class Action_CommandList : MonoBehaviour
     }
 
     public void Action_HealPlayer(int viewercount) {
-        player.GetComponent<Health>().Heal(200);
+        int amount;
+        int w = gamelogic.GetComponent<GameLogic>().GetWave();
+        if (w <= 10)
+        {
+            amount = 500;
+        }
+        else {
+            amount = 1000;
+        }
+            player.GetComponent<Health>().Heal(amount);
     }
 
     private void SpawnNamedEnemy(string name, Color color) {
-        Debug.Log("SPAWNNAMED");
+        //Debug.Log("SPAWNNAMED");
         if(allownamed)
         gamelogic.GetComponent<GameLogic>().SpawnLabeledEnemy(name, color);
     }

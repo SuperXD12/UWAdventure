@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8421965426570875693}
   - component: {fileID: 4624360290061148997}
   - component: {fileID: 676352324140367787}
+  - component: {fileID: 2834236430262088621}
   m_Layer: 0
   m_Name: DarkBatEnemy
   m_TagString: Enemy
@@ -160,3 +161,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 5feaa5aaf461a4f44a6ddd2f852a41c6, type: 2}
+--- !u!114 &2834236430262088621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4912304004390309491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42b6106408462b4ab7d4800b7e79437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

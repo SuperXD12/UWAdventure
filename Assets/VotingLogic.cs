@@ -356,13 +356,13 @@ public class VotingLogic : MonoBehaviour
             case 4:
                 return Color.yellow;
             case 5:
-                return new Color(211,39,245,1f); //lila
+                return new Color(146 / 255f, 0f / 255f, 209f / 255f, 1f); //lila
             case 6:
-                return new Color(39, 215, 245, 1f); //türkis
+                return new Color(39f / 255f, 215f / 255f, 245f / 255f, 1f); //türkis
             case 7:
-                return new Color(244, 103, 241, 1f); //pink
+                return new Color(244f / 255f, 103f / 255f, 241f / 255f, 1f); //pink
             case 8:
-                return new Color(255f, 165f, 0f,1f); //orange
+                return new Color(237f / 255f, 133f / 255f, 14f/255f, 1f); //orange
 
             default:
                 return Color.white;
@@ -645,7 +645,7 @@ public class VotingLogic : MonoBehaviour
        
     }
 
-    IEnumerator VoteAnnouncement(string message) {
+    public IEnumerator VoteAnnouncement(string message) {
         text_voteannouncement.GetComponent<TMPro.TextMeshProUGUI>().text = message;
         voteannouncementobject.SetActive(true);
         yield return new WaitForSeconds(5f);

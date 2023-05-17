@@ -33,9 +33,13 @@ public class Health : MonoBehaviour
     // Added for Visual Indicators
     private IEnumerator VisualIndicator(Color color)
     {
+        
+        Color oldcolor = GetComponent<SpriteRenderer>().color;
+        if (oldcolor == Color.red)
+            oldcolor = Color.white;
         GetComponent<SpriteRenderer>().color = color;
         yield return new WaitForSeconds(0.15f);
-        GetComponent<SpriteRenderer>().color = Color.white;
+        GetComponent<SpriteRenderer>().color = oldcolor;
     }
 
     public void Damage(int amount)
@@ -74,7 +78,13 @@ public class Health : MonoBehaviour
         }
         else
         {
+            
+            Debug.Log("HEALED by " + amount +" to "+health);
             this.health += amount;
+        }
+        if (gameObject.tag == "Player")
+        {
+            gameObject.GetComponent<HealthVisuals>().UpdateHealth(this.health);
         }
     }
 
@@ -83,6 +93,8 @@ public class Health : MonoBehaviour
         //Debug.Log("I am Dead!");
         if (gameObject.tag == "Enemy") 
         {
+            
+            gameObject.GetComponent<DeathAnimationFishEnemy>().playDeathAnim();
             gameObject.GetComponent<Enemy>().EnemyDied();
         }
         
@@ -124,7 +136,9 @@ public class Health : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
         }
         else {
-            Destroy(gameObject);
+            gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            gameObject.GetComponent<Enemy>().enabled = false;
+            Destroy(gameObject,0.5f);
         }
         
 

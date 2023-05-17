@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 1626447228283853710}
   - component: {fileID: 1626447228283853697}
   - component: {fileID: 7693998495759290669}
+  - component: {fileID: 2001812111171703085}
   m_Layer: 0
   m_Name: FishEnemy_Named
   m_TagString: Enemy
@@ -386,3 +387,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nameText: {fileID: 6165273040643618015}
+--- !u!114 &2001812111171703085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8728072705627609145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42b6106408462b4ab7d4800b7e79437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

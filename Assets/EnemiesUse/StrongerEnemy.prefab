@@ -60,6 +60,7 @@ GameObject:
   - component: {fileID: 327784968}
   - component: {fileID: 7330285250577121757}
   - component: {fileID: 8013620906640432090}
+  - component: {fileID: 8584471920443280594}
   m_Layer: 0
   m_Name: StrongerEnemy
   m_TagString: Enemy
@@ -242,3 +243,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &8584471920443280594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8048524908834707888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42b6106408462b4ab7d4800b7e79437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

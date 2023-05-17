@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -5742921820355170490}
   - component: {fileID: 327784967}
   - component: {fileID: 327784968}
+  - component: {fileID: -3527740821838733956}
   m_Layer: 0
   m_Name: FishEnemy
   m_TagString: Enemy
@@ -160,3 +161,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameLogic: {fileID: 0}
+--- !u!114 &-3527740821838733956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8048524908834707888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42b6106408462b4ab7d4800b7e79437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

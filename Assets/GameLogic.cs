@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Random = UnityEngine.Random;
+using System.Linq;
 
 public class GameLogic : MonoBehaviour
 {
@@ -28,6 +29,12 @@ public class GameLogic : MonoBehaviour
     public EnemyData strongerenemystats;
     public EnemyData darkbatstats;
     public EnemyData pinkSkullstats;
+    public EnemyData blueslimestats;
+    public EnemyData fishenemystatsp;
+    public EnemyData strongerenemystatsp;
+    public EnemyData darkbatstatsp;
+    public EnemyData pinkSkullstatsp;
+    public EnemyData blueslimestatsp;
     private float currentenemyrate;
     private int wave = 1;
     public GameObject wavetext;
@@ -46,7 +53,7 @@ public class GameLogic : MonoBehaviour
     public GameObject fishenemylabeled;
     public GameObject pinkSkullBoss;
     public GameObject darkbatenemy;
-    
+    private List<Tuple<string, Color>> tobeSpawnedNamed;
 
     private GameObject currenttobespawned;
     private int currenttobespawnednumber;
@@ -55,6 +62,12 @@ public class GameLogic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        darkbatstats = darkbatstatsp;
+        fishenemystats = fishenemystatsp;
+        strongerenemystats = strongerenemystatsp;
+        blueslimestats = blueslimestatsp;
+        pinkSkullstats = pinkSkullstatsp;
+        tobeSpawnedNamed = new List<Tuple<string, Color>>();
         Numberofenemiestospawn = 3;
         numberofstrongenemies = 0;
         numberofdarkbats=0;
@@ -144,6 +157,7 @@ public class GameLogic : MonoBehaviour
             strongerenemystats.hp += 100;
             darkbatstats.hp += 100;
             pinkSkullstats.hp += 200;
+            blueslimestats.hp += 100;
             
         }
         int u = wave % 3;
@@ -156,7 +170,7 @@ public class GameLogic : MonoBehaviour
             fishenemystats.speed += 0.5f;
             darkbatstats.speed += 0.5f;
             pinkSkullstats.speed += 0.5f;
-            currentenemyrate -= 0.5f;
+            //currentenemyrate -= 0.5f;
             Debug.Log("HIGHER ENEMY RATE");
         }
 
@@ -168,6 +182,7 @@ public class GameLogic : MonoBehaviour
             Numberofenemiestospawn = (Numberofenemiestospawn + 1);
         }
         else {
+            if (Numberofenemiestospawn <= 100)
             Debug.Log("MAX ENEMIES REACHED");
         }
 
@@ -192,9 +207,13 @@ public class GameLogic : MonoBehaviour
             int a = Random.Range(1, 360);
             Vector3 pos = RandomCircle(center, 20, a);
             GameObject tempenemy = Instantiate(currenttobespawned, pos, Quaternion.identity);
-            tempenemy.GetComponent<SpriteRenderer>().color = Color.red;
+            tempenemy.GetComponent<SpriteRenderer>().color = Color.blue;
         }
         
+    }
+
+    public int getCurrenttobespawned() {
+        return currenttobespawnednumber;
     }
 
     public void Action_ChangeMonsterType(int viewercount) {
@@ -249,16 +268,19 @@ public class GameLogic : MonoBehaviour
     }
 
     public void SpawnLabeledEnemy(string name, Color color) {
-        Vector3 center = player.transform.position;
+
+        tobeSpawnedNamed.Add(new Tuple<string, Color>(name, color));
+        /*Vector3 center = player.transform.position;
         //Debug.Log("SpawnEnemy Player Center: " + center);
         int a = Random.Range(1, 360);
         Vector3 pos = RandomCircle(center, 20, a);
         GameObject tempenemy = Instantiate(fishenemylabeled, pos, Quaternion.identity);
-        tempenemy.GetComponent<UiFollowEnemy>().SetName(name, color);
+        tempenemy.GetComponent<UiFollowEnemy>().SetName(name, color);*/
     }
 
     private void SpawnBossMonster() {
 
+        StartCoroutine(gameObject.GetComponent<VotingLogic>().VoteAnnouncement("A boss has been spawned"));
         Vector3 center = player.transform.position;
         //Debug.Log("SpawnEnemy Player Center: " + center);
         int a = Random.Range(1, 360);
@@ -270,11 +292,26 @@ public class GameLogic : MonoBehaviour
         
         //the actual spawning:
         for (int x = 0; x < Numberofenemiestospawn; x++) {
-            Vector3 center = player.transform.position;
-            //Debug.Log("SpawnEnemy Player Center: " + center);
-            int a = Random.Range(1,360);
-            Vector3 pos = RandomCircle(center, 15, a);
-            GameObject tempenemy = Instantiate(enemy, pos, Quaternion.identity);
+            if (tobeSpawnedNamed.Any())
+            {
+                Vector3 center = player.transform.position;
+                //Debug.Log("SpawnEnemy Player Center: " + center);
+                int a = Random.Range(1, 360);
+                Vector3 pos = RandomCircle(center, 15, a);
+                GameObject tempenemy = Instantiate(fishenemylabeled, pos, Quaternion.identity);
+                string name = tobeSpawnedNamed[0].Item1;
+                Color color = tobeSpawnedNamed[0].Item2;
+                tobeSpawnedNamed.RemoveAt(0);
+                tempenemy.GetComponent<UiFollowEnemy>().SetName(name, color);
+            }
+            else {
+                Vector3 center = player.transform.position;
+                //Debug.Log("SpawnEnemy Player Center: " + center);
+                int a = Random.Range(1, 360);
+                Vector3 pos = RandomCircle(center, 15, a);
+                GameObject tempenemy = Instantiate(enemy, pos, Quaternion.identity);
+            }
+            
         }
         yield return new WaitForSeconds(interval/3f);
         for (int x = 0; x < numberofstrongenemies; x++) {

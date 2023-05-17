@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43305494a719ebe48bc11565188b75be, type: 3}
   m_Name: Blueslime
   m_EditorClassIdentifier: 
-  hp: 1000
+  hp: 2000
   damage: 500
   speed: 5
   points: 20
