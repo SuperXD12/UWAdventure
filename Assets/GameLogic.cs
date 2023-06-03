@@ -35,6 +35,7 @@ public class GameLogic : MonoBehaviour
     public EnemyData darkbatstatsp;
     public EnemyData pinkSkullstatsp;
     public EnemyData blueslimestatsp;
+    public GameObject bossvotestext;
     private float currentenemyrate;
     private int wave = 1;
     public GameObject wavetext;
@@ -62,6 +63,7 @@ public class GameLogic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         darkbatstats = darkbatstatsp;
         fishenemystats = fishenemystatsp;
         strongerenemystats = strongerenemystatsp;
@@ -90,6 +92,7 @@ public class GameLogic : MonoBehaviour
         coroutine = SpawnEnemy(currentenemyrate, fishenemy,strongerenemy,darkbatenemy);
         StartCoroutine(coroutine);
         StartCoroutine(NextWave());
+        
         float help = (1f / player.GetComponent<Weapon>().firerate);
         astext.GetComponent<TMPro.TextMeshProUGUI>().text = help.ToString();
         datext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Weapon>().getCurrentDamage().ToString();
@@ -141,9 +144,12 @@ public class GameLogic : MonoBehaviour
         upgradeMenu.SetActive(false);
     }
 
+    
+
 
 
     private IEnumerator NextWave() {
+        
         yield return new WaitForSeconds(30f);
         //Next Wave:
         wave += 1;
@@ -207,6 +213,7 @@ public class GameLogic : MonoBehaviour
             int a = Random.Range(1, 360);
             Vector3 pos = RandomCircle(center, 20, a);
             GameObject tempenemy = Instantiate(currenttobespawned, pos, Quaternion.identity);
+            tempenemy.GetComponent<Enemy>().spawned = true;
             tempenemy.GetComponent<SpriteRenderer>().color = Color.blue;
         }
         
@@ -265,10 +272,11 @@ public class GameLogic : MonoBehaviour
     public void Action_VoteforBoss(int viewercount) {
         currentvotesforboss += 1;
         currentviewers = viewercount;
+        bossvotestext.GetComponent<TMPro.TextMeshProUGUI>().text = "Votes for a boss in the next wave: "+currentvotesforboss+"/2";
     }
 
     public void SpawnLabeledEnemy(string name, Color color) {
-
+        Debug.Log("addedlabeled");
         tobeSpawnedNamed.Add(new Tuple<string, Color>(name, color));
         /*Vector3 center = player.transform.position;
         //Debug.Log("SpawnEnemy Player Center: " + center);
@@ -286,6 +294,7 @@ public class GameLogic : MonoBehaviour
         int a = Random.Range(1, 360);
         Vector3 pos = RandomCircle(center, 20, a);
         GameObject tempenemy = Instantiate(pinkSkullBoss, pos, Quaternion.identity);
+        bossvotestext.GetComponent<TMPro.TextMeshProUGUI>().text = "Votes for a boss in the next wave: " + currentvotesforboss + "/2";
     }
 
     private IEnumerator SpawnEnemy(float interval, GameObject enemy, GameObject strongenemy, GameObject darkbat) {
@@ -294,14 +303,16 @@ public class GameLogic : MonoBehaviour
         for (int x = 0; x < Numberofenemiestospawn; x++) {
             if (tobeSpawnedNamed.Any())
             {
+                Debug.Log("tobespawnedlabeled");
                 Vector3 center = player.transform.position;
-                //Debug.Log("SpawnEnemy Player Center: " + center);
+                
                 int a = Random.Range(1, 360);
                 Vector3 pos = RandomCircle(center, 15, a);
                 GameObject tempenemy = Instantiate(fishenemylabeled, pos, Quaternion.identity);
                 string name = tobeSpawnedNamed[0].Item1;
                 Color color = tobeSpawnedNamed[0].Item2;
                 tobeSpawnedNamed.RemoveAt(0);
+                Debug.Log("SpawnEnemy Labled: " + name +" "+color);
                 tempenemy.GetComponent<UiFollowEnemy>().SetName(name, color);
             }
             else {

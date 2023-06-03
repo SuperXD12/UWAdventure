@@ -35,8 +35,18 @@ public class Health : MonoBehaviour
     {
         
         Color oldcolor = GetComponent<SpriteRenderer>().color;
-        if (oldcolor == Color.red)
-            oldcolor = Color.white;
+        if ((oldcolor == Color.green)||(oldcolor == Color.red))
+        {
+            if (gameObject.GetComponent<Enemy>().spawned)
+            {
+                oldcolor = Color.blue;
+            }
+            else {
+                oldcolor = Color.white;
+            }
+                
+        }
+            
         GetComponent<SpriteRenderer>().color = color;
         yield return new WaitForSeconds(0.15f);
         GetComponent<SpriteRenderer>().color = oldcolor;

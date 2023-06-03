@@ -133,14 +133,15 @@ public class VotingLogic : MonoBehaviour
     public GameObject scorecount18;
     public GameObject scorecount19;
     public GameObject scorecount20;
-
+    private int currentTime;
+    private bool timerstarted;
 
     private bool allowLeaderboard;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        timerstarted = false;
         allowLeaderboard = true;
         currentPollNumber = 0;
         currentPollName = currentPollNumber.ToString();
@@ -156,6 +157,7 @@ public class VotingLogic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        StartCoroutine(timerWave());
         if (Input.GetKeyDown(KeyCode.R))
         {
             ResetUids();
@@ -165,7 +167,10 @@ public class VotingLogic : MonoBehaviour
         {
             if (voted)
             {
-                
+                if (!timerstarted) {
+                    StartCoroutine(timerWave());
+                    timerstarted = true;
+                }
 
                 VotingStopTheCount();
                 ResetUids();
@@ -195,6 +200,20 @@ public class VotingLogic : MonoBehaviour
         }
         Debug.Log("Changed Voting Setting to " + votingsetting.ToString());
     }
+    public int getTime()
+    {
+        return currentTime;
+    }
+
+    private IEnumerator timerWave()
+    {
+        if (currentTime > 0)
+        {
+            currentTime--;
+        }
+        yield return new WaitForSeconds(1f);
+    }
+
 
     public async void VotingStopTheCount()
     {
@@ -206,6 +225,8 @@ public class VotingLogic : MonoBehaviour
         ResetVotes("E");
         ResetVotes("F");
         ResetUids();
+        currentTime = votinglength/1000;
+        gameObject.GetComponent<Action_CommandList>().NewTimer(votinglength/1000);
         gamelogic.GetComponent<Action_CommandList>().CanVoteAgain();
         /*if (currentPollName == "Fish")
         {
@@ -344,7 +365,7 @@ public class VotingLogic : MonoBehaviour
         voted = true;
     }
 
-    private Color parseColor(int x) { 
+    public Color parseColor(int x) { 
         switch (x)
             {
             case 1:
@@ -682,13 +703,13 @@ public class VotingLogic : MonoBehaviour
     }
 
     public async Task<Color> GetViewerColor(string name) {
-
+        Debug.Log(name + " to be spawned but searching color");
         var votingsformat = new GetColorSetting();
         votingsformat.votername = name;
         string json = JsonConvert.SerializeObject(votingsformat);
         json = JsonConvert.SerializeObject(json);
         json = "{\"body\": " + json + "}";
-        //Debug.Log("SETCOLOR: "+json);
+        Debug.Log("SETCOLOR: "+json);
         var httpContent = new StringContent(json); 
 
         try
@@ -697,7 +718,7 @@ public class VotingLogic : MonoBehaviour
             res.EnsureSuccessStatusCode();
             var jsonResponse = res.Content.ReadAsStringAsync().Result;
             JObject obj = JObject.Parse(jsonResponse);
-            //Debug.Log(obj["body"].ToString());
+            Debug.Log(obj["body"].ToString());
 
             return parseColor(int.Parse(obj["body"].ToString()));
 

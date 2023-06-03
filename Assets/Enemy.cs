@@ -8,13 +8,14 @@ public class Enemy : MonoBehaviour
     private float speed;
     [SerializeField]
     private EnemyData data;
-
+    public bool spawned;
 
     private GameObject player;
     private GameObject gamelogic;
     // Start is called before the first frame update
     void Start()
     {
+        spawned = false;
         player = GameObject.FindGameObjectWithTag("Player");
         gamelogic = GameObject.FindGameObjectWithTag("GameLogic");
         SetEnemyValues();

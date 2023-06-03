@@ -5,21 +5,36 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System;
+
 public class Action_CommandList : MonoBehaviour
 {
+    private Dictionary<string,Color> namedplayers;
     private GameObject player;
     private GameObject gamelogic;
     private ClientWebSocket ws;
     private bool allownamed;
+    private bool nextnamed;
     // Start is called before the first frame update
     void Start()
     {
+        nextnamed = true;
+        namedplayers = new Dictionary<string,Color>();
         ws = new ClientWebSocket();
         player = GameObject.FindGameObjectWithTag("Player");
         gamelogic = GameObject.FindGameObjectWithTag("GameLogic");
         WebsocketRL();
         allownamed = false;
-}
+    }
+
+    private void Update()
+    {
+        if (nextnamed) {
+            nextnamed = false;
+            Task.Run(donamedenemysspawn);
+        }
+    }
 
     void OnDestroy()
     {
@@ -46,8 +61,8 @@ public class Action_CommandList : MonoBehaviour
             {
                 Debug.Log("CLOSED");
                 //await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
-                
-                
+
+
             }
             else
             {
@@ -55,23 +70,81 @@ public class Action_CommandList : MonoBehaviour
                 string[] codeandtext = answer.Split(":");
                 if (codeandtext[0] == "1")
                 {
-                    Debug.Log(codeandtext[1]);
-                    Color currentcolor = await gamelogic.GetComponent<VotingLogic>().GetViewerColor(codeandtext[1]);
-                    SpawnNamedEnemy(codeandtext[1], currentcolor);
-                    
+                    //oldlabelenemy
+                    Debug.Log("old: "+codeandtext[1]);
+                    //Color currentcolor = await gamelogic.GetComponent<VotingLogic>().GetViewerColor(codeandtext[1]);
+                    //SpawnNamedEnemy(codeandtext[1], currentcolor);
+
                 }
                 else {
-                    if (codeandtext[0] == "3") {
+                    if (codeandtext[0] == "3")
+                    {
                         Debug.Log(codeandtext[1]);
                         string[] nameandcolor = codeandtext[1].Split(",");
+                        if (namedplayers.ContainsKey(nameandcolor[0])) {
+                            namedplayers[nameandcolor[0]] = gamelogic.GetComponent<VotingLogic>().parseColor(int.Parse(nameandcolor[1]));
+                        }
                         gamelogic.GetComponent<VotingLogic>().setColor(nameandcolor[0], nameandcolor[1]);
                     }
+                    else {
+                        if (codeandtext[0] == "5") {  //newconnected
+                            int currenttime = gamelogic.GetComponent<VotingLogic>().getTime();
+                            Debug.Log("new connected " + currenttime);
+                            NewTimer(currenttime);
+                        }
+                        else
+                        {
+                            if (codeandtext[0] == "6")
+                            {  //labelenemy
+                                Debug.Log("Please label: " + codeandtext[1]);
+                                string cname = codeandtext[1];
+                                if (!(namedplayers.ContainsKey(cname))) {
+                                    Color currentcolor = await gamelogic.GetComponent<VotingLogic>().GetViewerColor(cname);
+                                    namedplayers.Add(cname, currentcolor);
+                                    
+                                }
+                            }
+                            else
+                            {
+                                if (codeandtext[0] == "7")
+                                {  //dontlabelenemy
+                                    Debug.Log("Dont label: " + codeandtext[1]);
+                                    if (namedplayers.ContainsKey(codeandtext[1]))
+                                    {
+                                        namedplayers.Remove(codeandtext[1]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                 }
-                
-                
+
+
             }
         }
     }
+
+    private async Task donamedenemysspawn() { //TODO: BUILD IENUMERATOR AGAIN
+        Debug.Log("donamedenemyspawn");
+        if (allownamed)
+        {
+            Debug.Log("allowed: donamedenemyspawn");
+            foreach (KeyValuePair<string,Color> pairsc in namedplayers)
+            {
+                string cname = pairsc.Key;
+                Color ccolor = pairsc.Value;
+                Debug.Log("Trying to spawn: " + cname + " with color: " + ccolor);
+                SpawnNamedEnemy(cname, ccolor);
+   
+            }
+
+        }
+
+        await Task.Delay(5000);
+        nextnamed = true;
+    }
+    
 
     
     [System.Serializable]
@@ -89,7 +162,21 @@ public class Action_CommandList : MonoBehaviour
         var encoded = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
         var buffer = new System.ArraySegment<System.Byte>(encoded, 0, encoded.Length);
         //Debug.Log("Send message: 2:a");
+        
         await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+    }
+
+    public async void NewTimer(int x) {
+        var obj = new messages
+        {
+            action = "sendmessage",
+            message = "4:"+x
+        };
+        var encoded = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
+        var buffer = new System.ArraySegment<System.Byte>(encoded, 0, encoded.Length);
+        Debug.Log("Send message: 4:"+x);
+        if (ws != null)
+            await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
     }
     public void Action_ChangeWeapon() {
         player.GetComponent<Weapon>().ExecuteAction_ChangeWeapon();
@@ -135,9 +222,19 @@ public class Action_CommandList : MonoBehaviour
     }
 
     private void SpawnNamedEnemy(string name, Color color) {
-        //Debug.Log("SPAWNNAMED");
-        if(allownamed)
-        gamelogic.GetComponent<GameLogic>().SpawnLabeledEnemy(name, color);
+        Debug.Log("SPAWNNAMED: "+allownamed);
+        if (allownamed) {
+
+
+            try
+            {
+                gamelogic.GetComponent<GameLogic>().SpawnLabeledEnemy(name, color);
+            }
+            catch (System.Exception e) {
+                Debug.Log("Exception caught: "+ e.Message);
+            }
+        }
+        
     }
 
 }
