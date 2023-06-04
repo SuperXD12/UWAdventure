@@ -37,14 +37,26 @@ public class Health : MonoBehaviour
         Color oldcolor = GetComponent<SpriteRenderer>().color;
         if ((oldcolor == Color.green)||(oldcolor == Color.red))
         {
-            if (gameObject.GetComponent<Enemy>().spawned)
-            {
-                oldcolor = Color.blue;
+            if (gameObject.tag == "Enemy") {
+                if (gameObject.GetComponent<Enemy>().spawned)
+                {
+                    Debug.Log("HIT VIEWER SPAWNED ENEMY");
+                    oldcolor = Color.blue;
+                }
+                else
+                {
+
+                    oldcolor = Color.white;
+                }
+
             }
-            else {
+            else
+            {
+
                 oldcolor = Color.white;
             }
-                
+
+
         }
             
         GetComponent<SpriteRenderer>().color = color;

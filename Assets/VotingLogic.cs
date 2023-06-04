@@ -68,6 +68,8 @@ public class JsonResponseType
 
 public class VotingLogic : MonoBehaviour
 {
+    public GameObject barcharts;
+
     public GameObject text_voteannouncement;
 
     public GameObject voteannouncementobject;
@@ -287,7 +289,7 @@ public class VotingLogic : MonoBehaviour
         //Debug.Log(changemonster_votes);
        // Debug.Log(healplayer_votes);
         string voteresult = "";
-
+        
         if (changeweapon_votes != 0 || voteboss_votes != 0 || tempbuffdmgplayer_votes != 0 || spawnmonster_votes != 0 || changemonster_votes != 0 || healplayer_votes != 0)
         {
             string max =
@@ -354,7 +356,8 @@ public class VotingLogic : MonoBehaviour
                     voteresult = "Temporary player damage buff";
                 }
             }*/
-
+            gamelogic.GetComponent<BarChartDisplay>().UpdateChart(changeweapon_votes,voteboss_votes,tempbuffdmgplayer_votes,spawnmonster_votes,changemonster_votes,healplayer_votes);
+            //gamelogic.GetComponent<BarChartDisplay>().UpdateChart(7,3,0,4,3,8);
             //text_voteannouncement.GetComponent<TMPro.TextMeshProUGUI>().text = "It was voted for " + voteresult + "\nVotes: A " + changeweapon_votes.ToString() + " |B " + voteboss_votes.ToString() + " |C " + tempbuffdmgplayer_votes.ToString();
             StartCoroutine(VoteAnnouncement("Poll "+currentPollName+" voted for:\n"+voteresult));
             
@@ -667,6 +670,7 @@ public class VotingLogic : MonoBehaviour
     }
 
     public IEnumerator VoteAnnouncement(string message) {
+        barcharts.SetActive(true);
         text_voteannouncement.GetComponent<TMPro.TextMeshProUGUI>().text = message;
         voteannouncementobject.SetActive(true);
         yield return new WaitForSeconds(5f);

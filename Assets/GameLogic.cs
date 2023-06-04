@@ -18,6 +18,7 @@ public class GameLogic : MonoBehaviour
 
     public Font font;
     public GameObject pollnametext;
+    public GameObject pollnametextbar;
     public GameObject player;
     public Upgradehandling uh;
     private int Numberofenemiestospawn;
@@ -121,6 +122,8 @@ public class GameLogic : MonoBehaviour
     {
         string currentpollname =gameObject.GetComponent<VotingLogic>().GetCurrentPollName();
         pollnametext.GetComponent<TMPro.TextMeshProUGUI>().text =currentpollname;
+        pollnametextbar.GetComponent<TMPro.TextMeshProUGUI>().text = "Poll: "+(int.Parse(currentpollname)-1).ToString();
+
     }
 
     public int GetWave() {
@@ -276,7 +279,9 @@ public class GameLogic : MonoBehaviour
     }
 
     public void SpawnLabeledEnemy(string name, Color color) {
-        Debug.Log("addedlabeled");
+        //Debug.Log("addedlabeled");
+        bool tupleHadProcuct = tobeSpawnedNamed.Any(m => m.Item1 == name);
+        if(!tupleHadProcuct)
         tobeSpawnedNamed.Add(new Tuple<string, Color>(name, color));
         /*Vector3 center = player.transform.position;
         //Debug.Log("SpawnEnemy Player Center: " + center);
@@ -303,7 +308,7 @@ public class GameLogic : MonoBehaviour
         for (int x = 0; x < Numberofenemiestospawn; x++) {
             if (tobeSpawnedNamed.Any())
             {
-                Debug.Log("tobespawnedlabeled");
+                //Debug.Log("tobespawnedlabeled");
                 Vector3 center = player.transform.position;
                 
                 int a = Random.Range(1, 360);
@@ -312,8 +317,9 @@ public class GameLogic : MonoBehaviour
                 string name = tobeSpawnedNamed[0].Item1;
                 Color color = tobeSpawnedNamed[0].Item2;
                 tobeSpawnedNamed.RemoveAt(0);
-                Debug.Log("SpawnEnemy Labled: " + name +" "+color);
+                //Debug.Log("SpawnEnemy Labled: " + name +" "+color);
                 tempenemy.GetComponent<UiFollowEnemy>().SetName(name, color);
+                tempenemy.GetComponent<Enemy>().spawned = false;
             }
             else {
                 Vector3 center = player.transform.position;
@@ -321,6 +327,7 @@ public class GameLogic : MonoBehaviour
                 int a = Random.Range(1, 360);
                 Vector3 pos = RandomCircle(center, 15, a);
                 GameObject tempenemy = Instantiate(enemy, pos, Quaternion.identity);
+                tempenemy.GetComponent<Enemy>().spawned = false;
             }
             
         }
@@ -331,6 +338,7 @@ public class GameLogic : MonoBehaviour
             int a = Random.Range(1, 360);
             Vector3 pos = RandomCircle(center, 20, a);
             GameObject tempenemy = Instantiate(strongenemy, pos, Quaternion.identity);
+            tempenemy.GetComponent<Enemy>().spawned = false;
         }
         yield return new WaitForSeconds(interval/3f);
         for (int x = 0; x < numberofdarkbats; x++)
@@ -340,6 +348,7 @@ public class GameLogic : MonoBehaviour
             int a = Random.Range(1, 360);
             Vector3 pos = RandomCircle(center, 20, a);
             GameObject tempenemy = Instantiate(darkbat, pos, Quaternion.identity);
+            tempenemy.GetComponent<Enemy>().spawned = false;
         }
         yield return new WaitForSeconds(interval/3f);
 

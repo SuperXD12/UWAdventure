@@ -15,26 +15,18 @@ public class Action_CommandList : MonoBehaviour
     private GameObject gamelogic;
     private ClientWebSocket ws;
     private bool allownamed;
-    private bool nextnamed;
     // Start is called before the first frame update
     void Start()
     {
-        nextnamed = true;
         namedplayers = new Dictionary<string,Color>();
         ws = new ClientWebSocket();
         player = GameObject.FindGameObjectWithTag("Player");
         gamelogic = GameObject.FindGameObjectWithTag("GameLogic");
         WebsocketRL();
+        StartCoroutine(donamedenemysspawn());
         allownamed = false;
     }
 
-    private void Update()
-    {
-        if (nextnamed) {
-            nextnamed = false;
-            Task.Run(donamedenemysspawn);
-        }
-    }
 
     void OnDestroy()
     {
@@ -125,24 +117,24 @@ public class Action_CommandList : MonoBehaviour
         }
     }
 
-    private async Task donamedenemysspawn() { //TODO: BUILD IENUMERATOR AGAIN
-        Debug.Log("donamedenemyspawn");
+    private IEnumerator donamedenemysspawn() { //TODO: BUILD IENUMERATOR AGAIN
+        //Debug.Log("donamedenemyspawn");
         if (allownamed)
         {
-            Debug.Log("allowed: donamedenemyspawn");
+            //Debug.Log("allowed: donamedenemyspawn");
             foreach (KeyValuePair<string,Color> pairsc in namedplayers)
             {
                 string cname = pairsc.Key;
                 Color ccolor = pairsc.Value;
-                Debug.Log("Trying to spawn: " + cname + " with color: " + ccolor);
+                //Debug.Log("Trying to spawn: " + cname + " with color: " + ccolor);
                 SpawnNamedEnemy(cname, ccolor);
    
             }
 
         }
 
-        await Task.Delay(5000);
-        nextnamed = true;
+        yield return new WaitForSeconds(5f);
+        StartCoroutine(donamedenemysspawn());
     }
     
 
@@ -222,7 +214,7 @@ public class Action_CommandList : MonoBehaviour
     }
 
     private void SpawnNamedEnemy(string name, Color color) {
-        Debug.Log("SPAWNNAMED: "+allownamed);
+        //Debug.Log("SPAWNNAMED: "+allownamed);
         if (allownamed) {
 
 
