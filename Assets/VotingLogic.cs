@@ -551,104 +551,205 @@ public class VotingLogic : MonoBehaviour
             foreach (KeyValuePair<string, Tuple<int, int>> curr in sortedDict) {
                 if (i < 20)
                 {
+                    string tobename = curr.Key;
+                    //Debug.Log(tobename + " Länge: " + tobename.Length);
                     switch (i) {
                         case 0:
-                            scoreboardtop1.GetComponent<TMPro.TextMeshProUGUI>().text =curr.Key;
+                            
+                            if (tobename.Length > 17) {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop1.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount1.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop1.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 1:
-                            scoreboardtop2.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop2.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount2.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop2.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 2:
-                            scoreboardtop3.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop3.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount3.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop3.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 3:
-                            scoreboardtop4.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop4.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount4.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop4.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 4:
-                            scoreboardtop5.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop5.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount5.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop5.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 5:
-                            scoreboardtop6.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop6.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount6.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop6.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 6:
-                            scoreboardtop7.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop7.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount7.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop7.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 7:
-                            scoreboardtop8.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop8.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount8.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop8.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 8:
-                            scoreboardtop9.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop9.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount9.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop9.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 9:
-                            scoreboardtop10.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop10.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount10.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop10.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 10:
-                            scoreboardtop11.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop11.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount11.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.ToString();
                             scoreboardtop11.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 11:
-                            scoreboardtop12.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop12.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount12.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop12.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 12:
-                            scoreboardtop13.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop13.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount13.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop13.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 13:
-                            scoreboardtop14.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop14.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount14.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop14.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 14:
-                            scoreboardtop15.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop15.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount15.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop15.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 15:
-                            scoreboardtop16.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop16.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount16.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop16.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 16:
-                            scoreboardtop17.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop17.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount17.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop17.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 17:
-                            scoreboardtop18.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop18.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount18.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop18.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 18:
-                            scoreboardtop19.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop19.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount19.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop19.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
                         case 19:
-                            scoreboardtop20.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Key;
+
+                            if (tobename.Length > 17)
+                            {
+                                tobename = tobename.Substring(0, 15) + "...";
+                            }
+                            scoreboardtop20.GetComponent<TMPro.TextMeshProUGUI>().text = tobename;
                             scorecount20.GetComponent<TMPro.TextMeshProUGUI>().text = curr.Value.Item1.ToString();
                             scoreboardtop20.GetComponent<TMPro.TextMeshProUGUI>().color = parseColor(curr.Value.Item2);
                             break;
