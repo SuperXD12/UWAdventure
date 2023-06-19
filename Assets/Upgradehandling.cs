@@ -12,6 +12,7 @@ public class Upgradehandling : MonoBehaviour
     public GameObject aim3;
     public GameObject upgradeui;
     public GameObject upgradepointstext;
+    public GameObject levelupdisplay;
 
     private int upgradepoints = 0;
     // Start is called before the first frame update
@@ -39,6 +40,7 @@ public class Upgradehandling : MonoBehaviour
             upgradepointstext.GetComponent<TMPro.TextMeshProUGUI>().text = "Upgrade Points: " + upgradepoints;
             if (upgradepoints <= 0) {
                 upgradeui.SetActive(false);
+                levelupdisplay.SetActive(false);
             }
             return true;
         }

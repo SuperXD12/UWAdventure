@@ -15,7 +15,7 @@ using System.Linq;
 
 public class GameLogic : MonoBehaviour
 {
-
+    public GameObject levelupdisplay;
     public Font font;
     public GameObject pollnametext;
     public GameObject pollnametextbar;
@@ -64,7 +64,7 @@ public class GameLogic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
         darkbatstats = darkbatstatsp;
         fishenemystats = fishenemystatsp;
         strongerenemystats = strongerenemystatsp;
@@ -73,7 +73,7 @@ public class GameLogic : MonoBehaviour
         tobeSpawnedNamed = new List<Tuple<string, Color>>();
         Numberofenemiestospawn = 3;
         numberofstrongenemies = 0;
-        numberofdarkbats=0;
+        numberofdarkbats = 0;
         rnd = new System.Random();
         currenttobespawned = darkbatenemy;
         currenttobespawnednumber = 0;
@@ -81,19 +81,19 @@ public class GameLogic : MonoBehaviour
         currentenemyrate = 10f;
         currentviewers = 1;
         currentvotesforboss = 0;
-        if ((PlayerPrefs.HasKey("highscore_points") )&& (PlayerPrefs.HasKey("highscore_waves"))){
+        if ((PlayerPrefs.HasKey("highscore_points")) && (PlayerPrefs.HasKey("highscore_waves"))) {
             highwtext.GetComponent<TMPro.TextMeshProUGUI>().text = PlayerPrefs.GetInt("highscore_waves").ToString();
-            highptext.GetComponent<TMPro.TextMeshProUGUI>().text= PlayerPrefs.GetInt("highscore_points").ToString();
+            highptext.GetComponent<TMPro.TextMeshProUGUI>().text = PlayerPrefs.GetInt("highscore_points").ToString();
 
         }
 
         Cursor.lockState = CursorLockMode.Confined;
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = -1;
-        coroutine = SpawnEnemy(currentenemyrate, fishenemy,strongerenemy,darkbatenemy);
+        coroutine = SpawnEnemy(currentenemyrate, fishenemy, strongerenemy, darkbatenemy);
         StartCoroutine(coroutine);
         StartCoroutine(NextWave());
-        
+
         float help = (1f / player.GetComponent<Weapon>().firerate);
         astext.GetComponent<TMPro.TextMeshProUGUI>().text = help.ToString();
         datext.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Weapon>().getCurrentDamage().ToString();
@@ -116,13 +116,13 @@ public class GameLogic : MonoBehaviour
         }
     }
 
-    
+
 
     private void FixedUpdate()
     {
-        string currentpollname =gameObject.GetComponent<VotingLogic>().GetCurrentPollName();
-        pollnametext.GetComponent<TMPro.TextMeshProUGUI>().text =currentpollname;
-        pollnametextbar.GetComponent<TMPro.TextMeshProUGUI>().text = "Poll: "+(int.Parse(currentpollname)-1).ToString();
+        string currentpollname = gameObject.GetComponent<VotingLogic>().GetCurrentPollName();
+        pollnametext.GetComponent<TMPro.TextMeshProUGUI>().text = currentpollname;
+        pollnametextbar.GetComponent<TMPro.TextMeshProUGUI>().text = "Poll: " + (int.Parse(currentpollname) - 1).ToString();
 
     }
 
@@ -147,8 +147,13 @@ public class GameLogic : MonoBehaviour
         upgradeMenu.SetActive(false);
     }
 
-    
 
+    private IEnumerator LevelUpAnnounce()
+    {
+        levelupdisplay.SetActive(true);
+        yield return new WaitForSeconds(5f);
+        levelupdisplay.SetActive(false);
+    }
 
 
     private IEnumerator NextWave() {
@@ -157,6 +162,8 @@ public class GameLogic : MonoBehaviour
         //Next Wave:
         wave += 1;
         uh.GainUpgradePoint();
+        LevelUpAnnounce();
+        StartCoroutine(LevelUpAnnounce());
         int k = wave % 5;
         if (k == 0) {
             //fishenemystats.speed += 0.25f;
